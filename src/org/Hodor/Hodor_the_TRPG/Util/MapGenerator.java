@@ -30,14 +30,14 @@ public class MapGenerator {
                 min = (i < min)?i:min;
             }
             variance = (int)Math.abs((max - min) * var);
-            variance = (variance == 0)?1:variance;
             System.out.println(variance);
         }
-        map[topX][topY + (h/2)] = (tL + bL)/2 + (random.nextInt(variance*2)-variance);
-        map[topX + (w/2)][topY] = (tL + tR)/2 + (random.nextInt(variance*2)-variance);
-        map[topX + (w/2)][topY + (h/2)] = (tR + bR + bL + tL)/4 + (random.nextInt(variance*2)-variance);
-        map[topX + w][topY + (h/2)] = (tR + bR)/2 + (random.nextInt(variance*2)-variance);
-        map[topX + (w/2)][topY + h] = (bR + bL)/2 + (random.nextInt(variance*2)-variance);
+        map[topX + (w/2)][topY] = (tL + tR)/2;
+        map[topX][topY + (h/2)] = (bL + tL)/2;
+        map[topX + (w/2)][topY + (h/2)] = (tR + bR + bL + tL)/4 + ((variance!=0)?random.nextInt((int)(variance*2))-(int)(variance):0);
+        map[topX + w][topY + (h/2)] = (tR + bR)/2;
+        map[topX + (w/2)][topY + h] = (bR + bL)/2;
+
         linearInterpolate(topX, topY, h/2, w/2, var); // Top left corner
         linearInterpolate(topX + (w/2), topY, h/2, w/2, var); // Top right corner
         linearInterpolate(topX, topY + (h/2), h/2, w/2, var); // Bottom left corner
@@ -56,7 +56,7 @@ public class MapGenerator {
     public static void main(String[] args) {
         for(int[] row : new MapGenerator(17).generate()){
             for(int i : row){
-                System.out.printf("%5d", i);
+                System.out.printf("%4d", i);
             }
             System.out.println();
         }
