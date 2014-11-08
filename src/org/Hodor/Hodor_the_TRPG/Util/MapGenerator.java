@@ -34,7 +34,7 @@ public class MapGenerator {
         }
         map[topX + (w/2)][topY] = (tL + tR)/2;
         map[topX][topY + (h/2)] = (bL + tL)/2;
-        map[topX + (w/2)][topY + (h/2)] = (tR + bR + bL + tL)/4 + ((variance!=0)?random.nextInt((int)(variance*2))-(int)(variance):0);
+        map[topX + (w/2)][topY + (h/2)] = (tR + bR + bL + tL)/4 + ((variance!=0)?random.nextInt((variance*2))-(variance):0);
         map[topX + w][topY + (h/2)] = (tR + bR)/2;
         map[topX + (w/2)][topY + h] = (bR + bL)/2;
 
