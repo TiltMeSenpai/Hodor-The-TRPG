@@ -30,7 +30,6 @@ public class MapGenerator {
                 min = (i < min)?i:min;
             }
             variance = (int)Math.abs((max - min) * var);
-            System.out.println(variance);
         }
         map[topX + (w/2)][topY] = (tL + tR)/2;
         map[topX][topY + (h/2)] = (bL + tL)/2;
@@ -45,10 +44,10 @@ public class MapGenerator {
     }
 
     public int[][] generate() {
-        map[0][0] = random.nextInt(20);
-        map[map.length-1][0] = random.nextInt(20);
-        map[0][map[0].length-1] = random.nextInt(20);
-        map[map.length-1][map[0].length-1] = random.nextInt(20);
+        map[0][0] = random.nextInt(1000);
+        map[map.length-1][0] = random.nextInt(1000);
+        map[0][map[0].length-1] = random.nextInt(1000);
+        map[map.length-1][map[0].length-1] = random.nextInt(1000);
         linearInterpolate(0,0,map[0].length - 1, map.length - 1, .5f);
         return map;
     }
@@ -60,5 +59,44 @@ public class MapGenerator {
             }
             System.out.println();
         }
+    }
+    public static int rampRed(int r){
+        if(r < 450)
+            return (int)((r/450.0)*251 + (1 - r/450.0)*46)/2;
+        else if(r < 700){
+            r -= 450;
+            return (int)((r/250.0)*224 + (1 - r/250.0)*251)/2;
+        }
+        else if(r < 875){
+            r -= 875;
+            return (int)((r/125.0)*200 + (1 - r/125.0)*224)/2;
+        }
+        else return 215;
+    }
+    public static int rampGreen(int r){
+        if(r < 450)
+            return (int)((r/450.0)*255 + (1 - r/450.0)*154)/2;
+        else if(r < 700){
+            r -= 450;
+            return (int)((r/250.0)*108 + (1 - r/250.0)*255)/2;
+        }
+        else if(r < 875){
+            r -= 875;
+            return (int)((r/125.0)*55 + (1 - r/125.0)*108)/2;
+        }
+        else return 244;
+    }
+    public static int rampBlue(int r){
+        if(r < 450)
+            return (int)((r/450.0)*128 + (1 - r/450.0)*88)/2;
+        else if(r < 700){
+            r -= 450;
+            return (int)((r/250.0)*31 + (1 - r/250.0)*128)/2;
+        }
+        else if(r < 875){
+            r -= 875;
+            return (int)((r/125.0)*55 + (1 - r/125.0)*31)/2;
+        }
+        else return 244;
     }
 }

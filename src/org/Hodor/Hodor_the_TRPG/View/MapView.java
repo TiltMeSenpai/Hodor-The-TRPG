@@ -3,21 +3,28 @@ package org.Hodor.Hodor_the_TRPG.View;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import org.Hodor.Hodor_the_TRPG.R;
+import org.Hodor.Hodor_the_TRPG.Util.MapGenerator;
 
 /**
  * Created by jkoike on 11/7/14.
  */
 public class MapView extends View {
-    float x, y, scale;
+    float x, y, scale, tilesOnH, tilesOnV;
     int size;
     ScaleGestureDetector scaleListener;
     GestureDetector detector;
+    Paint paint;
+
+    // Todo: Replace with proper world
+    int[][] world;
 
     public MapView(Context context) {
         super(context);
@@ -36,19 +43,26 @@ public class MapView extends View {
 
     private void setup(){
         size = 65;
+        scale = 100;
+        world = new MapGenerator(size).generate();
         setVerticalScrollBarEnabled(true);
         setHorizontalScrollBarEnabled(true);
+        paint = new Paint();
+
+        // Zoom in.
         scaleListener = new ScaleGestureDetector(getContext(), new ScaleGestureDetector.SimpleOnScaleGestureListener(){
             @Override
             public boolean onScale(ScaleGestureDetector detector) {
-                scale *= detector.getScaleFactor();
+                scale /= detector.getScaleFactor();
 
                 // Don't let the object get too small or too large.
-                scale = Math.max(10f, Math.min(scale, 1000.0f));
+                scale = Math.max(1f, Math.min(scale, 100.0f));
 
                 return true;
             }
         });
+
+        // For now, we just need to scroll around
         detector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener(){
             @Override
             public boolean onDown(MotionEvent e) {
@@ -62,6 +76,8 @@ public class MapView extends View {
                 return true;
             }
         });
+        // Makes the scroll bars show up. No idea what demon magic is going on here, just pulled it from
+        //      Stack Overflow
         TypedArray a = getContext().obtainStyledAttributes(R.styleable.View);
         initializeScrollbars(a);
         a.recycle();
@@ -77,8 +93,9 @@ public class MapView extends View {
 
     @Override
     public void scrollBy(int x, int y) {
-        this.x -= x;
-        this.y -= y;
+        this.x += x/getWidth();
+        this.y += y/getHeight();
+        invalidate();
     }
 
     @Override
@@ -88,22 +105,22 @@ public class MapView extends View {
 
     @Override
     protected int computeHorizontalScrollRange() {
-        return (int)(size*100*scale);
+        return 100;
     }
 
     @Override
     protected int computeVerticalScrollRange() {
-        return (int)(size*100*scale);
+        return 100;
     }
 
     @Override
     protected int computeHorizontalScrollExtent() {
-        return (int)(scale * 100);
+        return (int)scale;
     }
 
     @Override
     protected int computeVerticalScrollExtent() {
-        return (int)(scale * 100);
+        return (int)scale;
     }
 
     @Override
@@ -113,6 +130,7 @@ public class MapView extends View {
         }
         if(x>computeHorizontalScrollRange()) {
             x = computeHorizontalScrollRange();
+            Log.d("Horizontal", "Scaling back");
         }
         return (int)x;
     }
@@ -122,7 +140,7 @@ public class MapView extends View {
         if(y<0) {
             y = 0;
         }
-        if(y>computeHorizontalScrollRange()) {
+        if(y>computeVerticalScrollRange()) {
             y = computeVerticalScrollRange();
         }
         return (int)y;
@@ -137,6 +155,36 @@ public class MapView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+        tilesOnV = size*(scale/100) * ((float)getHeight()/getWidth());
+        tilesOnH = size*(scale/100) * ((float)getWidth()/getHeight());
+        float tileOffsetH = Math.max(0,((size-tilesOnH)*(computeHorizontalScrollOffset()/100.0f)));
+        float tileOffsetV = Math.max(0,((size-tilesOnV)*(computeVerticalScrollOffset()/100.0f)));
+        int tileH = (int)(getWidth()/tilesOnH);
+        int tileV = (int)(getHeight()/tilesOnV);
+        Log.d("Offsets", String.format("OffsetV: %f, OffsetH: %f, TilesH: %d, TilesV: %d", tileOffsetV, tileOffsetH,
+                (int)tilesOnH, (int)tilesOnV));
+        for(int i = 0; i < tilesOnV; i++) {
+            for (int j = 0; j < tilesOnH; j++) {
+                try {
+                    int y = (int)(i + tileOffsetV), x= (int)(j + tileOffsetH);
+                    x = (x>64)?64:x;
+                    y = (y>64)?64:y;
+                    paint.setStyle(Paint.Style.STROKE);
+                    paint.setARGB(255, 0, 0, 0);
+                    paint.setStrokeWidth(3);
+                    canvas.drawRect(j * tileH, i * tileV, (j + 1) * tileH, (i + 1) * tileV, paint);
+                    paint.setStyle(Paint.Style.FILL);
+                    paint.setARGB(255,
+                            MapGenerator.rampRed(world[y][x]),
+                            MapGenerator.rampGreen(world[y][x]),
+                            MapGenerator.rampBlue(world[y][x])
+                    );
+                    canvas.drawRect(j * tileH, i * tileV, (j + 1) * tileH, (i + 1) * tileV, paint);
+                }
+                catch (IndexOutOfBoundsException e){
+                    Log.e("Index out of bounds", "Oh, no!");
+                }
+            }
+        }
     }
 }
