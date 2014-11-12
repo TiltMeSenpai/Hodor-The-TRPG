@@ -152,7 +152,7 @@ public class MapView extends ViewGroup {
         }
         return (int)y;
     }
-c
+
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
         scaleListener.onTouchEvent(event);
