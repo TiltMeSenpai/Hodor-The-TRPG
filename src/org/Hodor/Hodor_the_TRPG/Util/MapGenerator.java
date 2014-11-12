@@ -48,7 +48,7 @@ public class MapGenerator {
         map[map.length-1][0] = random.nextInt(1000);
         map[0][map[0].length-1] = random.nextInt(1000);
         map[map.length-1][map[0].length-1] = random.nextInt(1000);
-        linearInterpolate(0,0,map[0].length - 1, map.length - 1, .5f);
+        linearInterpolate(0,0,map[0].length - 1, map.length - 1, .75f);
         return map;
     }
 

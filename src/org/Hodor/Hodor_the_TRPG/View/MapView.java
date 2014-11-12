@@ -75,6 +75,11 @@ public class MapView extends View {
                 awakenScrollBars(1000);
                 return true;
             }
+
+            @Override
+            public boolean onSingleTapConfirmed(MotionEvent e) {
+                return false;
+            }
         });
         // Makes the scroll bars show up. No idea what demon magic is going on here, just pulled it from
         //      Stack Overflow
@@ -100,7 +105,12 @@ public class MapView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
+        // Device is in portrait mode
+        if (heightMeasureSpec > widthMeasureSpec)
+            setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
+        // Device is in landscape mode
+        else if (widthMeasureSpec > heightMeasureSpec)
+            setMeasuredDimension(heightMeasureSpec, widthMeasureSpec);
     }
 
     @Override
@@ -130,7 +140,6 @@ public class MapView extends View {
         }
         if(x>computeHorizontalScrollRange()) {
             x = computeHorizontalScrollRange();
-            Log.d("Horizontal", "Scaling back");
         }
         return (int)x;
     }
@@ -149,20 +158,22 @@ public class MapView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         scaleListener.onTouchEvent(event);
-        detector.onTouchEvent(event);
-        return true;
+        return detector.onTouchEvent(event);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
+        if(isInEditMode()){
+            canvas.drawText("Map View", 0,0,paint);
+            return;
+        }
+
         tilesOnV = size*(scale/100) * ((float)getHeight()/getWidth());
         tilesOnH = size*(scale/100) * ((float)getWidth()/getHeight());
         float tileOffsetH = Math.max(0,((size-tilesOnH)*(computeHorizontalScrollOffset()/100.0f)));
         float tileOffsetV = Math.max(0,((size-tilesOnV)*(computeVerticalScrollOffset()/100.0f)));
         int tileH = (int)(getWidth()/tilesOnH);
         int tileV = (int)(getHeight()/tilesOnV);
-        Log.d("Offsets", String.format("OffsetV: %f, OffsetH: %f, TilesH: %d, TilesV: %d", tileOffsetV, tileOffsetH,
-                (int)tilesOnH, (int)tilesOnV));
         for(int i = 0; i < tilesOnV; i++) {
             for (int j = 0; j < tilesOnH; j++) {
                 try {

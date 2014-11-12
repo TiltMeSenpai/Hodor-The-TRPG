@@ -10,4 +10,12 @@ import java.util.HashMap;
 public class Map {
     private Tile[][] map;
     private HashMap<Point, Unit> units;
+    public Map(int[][] world){
+        map = new Tile[world.length][world[0].length];
+        for (int i = 0; i < world.length; i++) {
+            for (int j = 0; j < world[0].length; j++) {
+                map[i][j] = new Ground(world[i][j]);
+            }
+        }
+    }
 }
