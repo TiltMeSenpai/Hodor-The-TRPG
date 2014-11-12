@@ -8,7 +8,7 @@ import org.Hodor.Hodor_the_TRPG.Model.Tile;
 /**
  * Created by jkoike on 11/7/14.
  */
-public abstract class TileView extends View {
+public class TileView extends View {
     public Tile getTile() {
         return tile;
     }
@@ -18,6 +18,8 @@ public abstract class TileView extends View {
     }
 
     Tile tile;
+
+
 
     public TileView(Context context) {
         super(context);
