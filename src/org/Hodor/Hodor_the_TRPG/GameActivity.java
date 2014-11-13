@@ -9,6 +9,10 @@ import org.Hodor.Hodor_the_TRPG.Util.MapGenerator;
  * Created by jkoike on 11/7/14.
  */
 public class GameActivity extends Activity {
+    public GameActivity() {
+        this.map = new Map(new MapGenerator(17).generate());
+    }
+
     Map map;
 
     public Map getMap() {
@@ -19,6 +23,5 @@ public class GameActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_layout);
-        map = new Map(new MapGenerator(65).generate());
     }
 }

@@ -1,7 +1,6 @@
 package org.Hodor.Hodor_the_TRPG.View;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -11,7 +10,7 @@ import android.view.ViewGroup;
 import org.Hodor.Hodor_the_TRPG.GameActivity;
 import org.Hodor.Hodor_the_TRPG.Model.Map;
 import org.Hodor.Hodor_the_TRPG.Model.Tile;
-import org.Hodor.Hodor_the_TRPG.R;
+import org.Hodor.Hodor_the_TRPG.Util.MapGenerator;
 
 /**
  * Created by jkoike on 11/7/14.
@@ -43,9 +42,11 @@ public class MapView extends ViewGroup {
     private void setup(){
         size = 65;
         scale = 100;
-        assert getContext() instanceof GameActivity;
-        Map map = ((GameActivity) getContext()).getMap();
+        Map map= new Map(new MapGenerator(65).generate());
+        if( getContext() instanceof GameActivity)
+            map = ((GameActivity) getContext()).getMap();
         Tile[][] tiles = map.getMap();
+        world = new TileView[tiles.length][tiles[0].length];
         for (int i = 0; i <tiles.length-1; i++) {
             for (int j = 0; j < tiles[0].length-1; j++) {
                 world[i][j] = new TileView(getContext());
@@ -87,11 +88,7 @@ public class MapView extends ViewGroup {
                 return false;
             }
         });
-        // Makes the scroll bars show up. No idea what demon magic is going on here, just pulled it from
-        //      Stack Overflow
-        TypedArray a = getContext().obtainStyledAttributes(R.styleable.View);
-        initializeScrollbars(a);
-        a.recycle();
+        setWillNotDraw(false);
     }
 
     @Override
@@ -185,7 +182,7 @@ public class MapView extends ViewGroup {
                     world[x][y].layout(j * tileH, i * tileV, (j + 1) * tileH, (i + 1) * tileV);
                 }
                 catch (IndexOutOfBoundsException e){
-                    Log.e("Index out of bounds", "Oh, no!");
+                    Log.e("DEBUG", "Something messed up at "+i+", "+j);
                 }
             }
         }
