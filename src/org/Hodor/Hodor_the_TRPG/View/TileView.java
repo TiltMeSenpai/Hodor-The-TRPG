@@ -3,7 +3,7 @@ package org.Hodor.Hodor_the_TRPG.View;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-import org.Hodor.Hodor_the_TRPG.Model.Tile;
+import org.Hodor.Hodor_the_TRPG.Model.Map.Tile;
 
 /**
  * Created by jkoike on 11/7/14.

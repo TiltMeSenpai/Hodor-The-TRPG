@@ -1,4 +1,4 @@
-package org.Hodor.Hodor_the_TRPG.Model;
+package org.Hodor.Hodor_the_TRPG.Model.Map;
 
 /**
  * Created by jkoike on 11/5/14.
