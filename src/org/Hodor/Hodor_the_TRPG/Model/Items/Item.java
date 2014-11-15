@@ -1,9 +1,28 @@
 package org.Hodor.Hodor_the_TRPG.Model.Items;
 
+import org.Hodor.Hodor_the_TRPG.Model.Units.Unit;
+
 /**
  * Created by Jason on 11/12/14.
  */
-public interface Item {
+public abstract class Item {
 
-    public void execute();
+    protected String description;
+    protected String name;
+
+    public Item(String name, String description){
+        this.description = description;
+        this.name = name;
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    public String getDescription(){
+        return description;
+    }
+    public abstract void execute(Unit unit);
+    public abstract Item equip(Unit unit);
+    public abstract Item unequip(Unit unit);
 }
