@@ -21,12 +21,20 @@ public class Weapon extends Item {
 
     @Override
     public Item equip(Unit unit) {
-        unit.setStr(unit.getStr() + str);
-        //ADD RETURN STATEMENTS THATS THE ERROR
+        Item previous = unit.getWeapon();
+        unit.setWeapon(this);
+        return previous;
+
     }
 
     @Override
     public Item unequip(Unit unit) {
-        return null;
+        Item previous = unit.getWeapon();
+        unit.setWeapon(null);
+        return previous;
+    }
+
+    public int getStr() {
+        return str;
     }
 }
