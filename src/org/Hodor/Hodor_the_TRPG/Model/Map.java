@@ -1,15 +1,13 @@
 package org.Hodor.Hodor_the_TRPG.Model;
 
-import android.graphics.Point;
-
-import java.util.HashMap;
+import java.util.ArrayList;
 
 /**
  * Created by jkoike on 11/5/14.
  */
 public class Map {
     private Tile[][] map;
-    private HashMap<Point, Unit> units;
+    private ArrayList<Unit> p1units,p2units;
     public Map(int[][] world){
         map = new Tile[world.length][world[0].length];
         for (int i = 0; i < world.length; i++) {

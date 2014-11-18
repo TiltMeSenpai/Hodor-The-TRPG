@@ -2,21 +2,13 @@ package org.Hodor.Hodor_the_TRPG;
 
 import android.app.Activity;
 import android.os.Bundle;
-import org.Hodor.Hodor_the_TRPG.Model.Map;
-import org.Hodor.Hodor_the_TRPG.Util.MapGenerator;
 
 /**
  * Created by jkoike on 11/7/14.
  */
 public class GameActivity extends Activity {
     public GameActivity() {
-        this.map = new Map(new MapGenerator(17).generate());
-    }
-
-    Map map;
-
-    public Map getMap() {
-        return map;
+        new Delegate();
     }
 
     @Override
