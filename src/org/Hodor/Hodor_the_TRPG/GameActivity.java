@@ -6,7 +6,11 @@ import android.os.Bundle;
 /**
  * Created by jkoike on 11/7/14.
  */
-public class MainActivity extends Activity {
+public class GameActivity extends Activity {
+    public GameActivity() {
+        new Delegate();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -1,30 +1,32 @@
 package org.Hodor.Hodor_the_TRPG.View;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Paint;
+import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
-import android.view.View;
-import org.Hodor.Hodor_the_TRPG.R;
+import android.view.ViewGroup;
+import org.Hodor.Hodor_the_TRPG.Delegate;
+import org.Hodor.Hodor_the_TRPG.GameActivity;
+import org.Hodor.Hodor_the_TRPG.Model.Map;
+import org.Hodor.Hodor_the_TRPG.Model.Tile;
 import org.Hodor.Hodor_the_TRPG.Util.MapGenerator;
 
 /**
  * Created by jkoike on 11/7/14.
  */
-public class MapView extends View {
+public class MapView extends ViewGroup {
     float x, y, scale, tilesOnH, tilesOnV;
     int size;
+    long firstTapTime;
+    final int DOUBLE_TAP_NS = 250000000;
     ScaleGestureDetector scaleListener;
     GestureDetector detector;
-    Paint paint;
 
-    // Todo: Replace with proper world
-    int[][] world;
+    TileView[][] world;
 
     public MapView(Context context) {
         super(context);
@@ -43,11 +45,21 @@ public class MapView extends View {
 
     private void setup(){
         size = 65;
-        scale = 100;
-        world = new MapGenerator(size).generate();
+        scale = 50;
+        Map map= new Map(new MapGenerator(65).generate());
+        if( getContext() instanceof GameActivity)
+            map = Delegate.getMap();
+        Tile[][] tiles = map.getMap();
+        world = new TileView[tiles.length][tiles[0].length];
+        for (int i = 0; i <tiles.length; i++) {
+            for (int j = 0; j < tiles[0].length; j++) {
+                world[i][j] = new TileView(getContext());
+                world[i][j].setTile(tiles[i][j]);
+                addView(world[i][j]);
+            }
+        }
         setVerticalScrollBarEnabled(true);
         setHorizontalScrollBarEnabled(true);
-        paint = new Paint();
 
         // Zoom in.
         scaleListener = new ScaleGestureDetector(getContext(), new ScaleGestureDetector.SimpleOnScaleGestureListener(){
@@ -57,6 +69,8 @@ public class MapView extends View {
 
                 // Don't let the object get too small or too large.
                 scale = Math.max(1f, Math.min(scale, 100.0f));
+                tilesOnV = size*(scale/100) * ((float)getHeight()/getWidth());
+                tilesOnH = size*(scale/100) * ((float)getWidth()/getHeight());
 
                 return true;
             }
@@ -77,29 +91,43 @@ public class MapView extends View {
             }
 
             @Override
-            public boolean onSingleTapConfirmed(MotionEvent e) {
+            public boolean onDoubleTap(MotionEvent e) {
+                return false;
+            }
+
+            @Override
+            public boolean onSingleTapUp(MotionEvent e) {
                 return false;
             }
         });
-        // Makes the scroll bars show up. No idea what demon magic is going on here, just pulled it from
-        //      Stack Overflow
-        TypedArray a = getContext().obtainStyledAttributes(R.styleable.View);
-        initializeScrollbars(a);
-        a.recycle();
+        setWillNotDraw(false);
     }
 
     @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        if(!changed)
-            return;
-        int h = b-t;
-        int w = r-l;
-    }
-
-    @Override
-    public void scrollBy(int x, int y) {
-        this.x += x/getWidth();
-        this.y += y/getHeight();
+    public void scrollBy(int ix, int iy) {
+        for(TileView[] row : world)
+            for(TileView view : row)
+                view.setVisibility(INVISIBLE);
+        this.x += ix/getWidth();
+        this.y += iy/getHeight();
+        float tileOffsetH = Math.max(0,((size-tilesOnH)*(computeHorizontalScrollOffset()/100.0f)));
+        float tileOffsetV = Math.max(0,((size-tilesOnV)*(computeVerticalScrollOffset()/100.0f)));
+        int tileH = (int)(getWidth()/tilesOnH);
+        int tileV = (int)(getHeight()/tilesOnV);
+        for(int i = 0; i < tilesOnV; i++) {
+            for (int j = 0; j < tilesOnH; j++) {
+                int y = (int)(i + tileOffsetV), x= (int)(j + tileOffsetH);
+                x = (x>world.length-1)?world.length-1:x;
+                y = (y>world[0].length-1)?world[0].length-1:y;
+                try {
+                    world[x][y].setVisibility(VISIBLE);
+                    world[x][y].layout(j * tileH, i * tileV, (j + 1) * tileH, (i + 1) * tileV);
+                }
+                catch (IndexOutOfBoundsException e){
+                    Log.wtf("DEBUG", "Something messed up on " + world[x][y] + " at " + x + ", " + y);
+                }
+            }
+        }
         invalidate();
     }
 
@@ -156,46 +184,40 @@ public class MapView extends View {
     }
 
     @Override
+    public boolean onInterceptTouchEvent(MotionEvent event) {
+        if(firstTapTime > 0 && System.nanoTime() - firstTapTime < DOUBLE_TAP_NS) {
+            firstTapTime = System.nanoTime();
+            return false;
+        }
+        if(System.nanoTime() - firstTapTime > DOUBLE_TAP_NS)
+            firstTapTime = System.nanoTime();
+        return true;
+    }
+
+    @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if(event.getActionMasked() == MotionEvent.ACTION_DOWN
+                && SystemClock.currentThreadTimeMillis() - firstTapTime > 0
+                && SystemClock.currentThreadTimeMillis() - firstTapTime < DOUBLE_TAP_NS) {
+            return false;
+        }
+        if(System.nanoTime() - firstTapTime > DOUBLE_TAP_NS)
+            firstTapTime = 0;
         scaleListener.onTouchEvent(event);
-        return detector.onTouchEvent(event);
+        detector.onTouchEvent(event);
+        return true;
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom){
+        if(!changed)
+            return;
+        scrollBy(0,0);
+        invalidate();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if(isInEditMode()){
-            canvas.drawText("Map View", 0,0,paint);
-            return;
-        }
-
-        tilesOnV = size*(scale/100) * ((float)getHeight()/getWidth());
-        tilesOnH = size*(scale/100) * ((float)getWidth()/getHeight());
-        float tileOffsetH = Math.max(0,((size-tilesOnH)*(computeHorizontalScrollOffset()/100.0f)));
-        float tileOffsetV = Math.max(0,((size-tilesOnV)*(computeVerticalScrollOffset()/100.0f)));
-        int tileH = (int)(getWidth()/tilesOnH);
-        int tileV = (int)(getHeight()/tilesOnV);
-        for(int i = 0; i < tilesOnV; i++) {
-            for (int j = 0; j < tilesOnH; j++) {
-                try {
-                    int y = (int)(i + tileOffsetV), x= (int)(j + tileOffsetH);
-                    x = (x>64)?64:x;
-                    y = (y>64)?64:y;
-                    paint.setStyle(Paint.Style.STROKE);
-                    paint.setARGB(255, 0, 0, 0);
-                    paint.setStrokeWidth(3);
-                    canvas.drawRect(j * tileH, i * tileV, (j + 1) * tileH, (i + 1) * tileV, paint);
-                    paint.setStyle(Paint.Style.FILL);
-                    paint.setARGB(255,
-                            MapGenerator.rampRed(world[y][x]),
-                            MapGenerator.rampGreen(world[y][x]),
-                            MapGenerator.rampBlue(world[y][x])
-                    );
-                    canvas.drawRect(j * tileH, i * tileV, (j + 1) * tileH, (i + 1) * tileV, paint);
-                }
-                catch (IndexOutOfBoundsException e){
-                    Log.e("Index out of bounds", "Oh, no!");
-                }
-            }
-        }
+        super.onDraw(canvas);
     }
 }
