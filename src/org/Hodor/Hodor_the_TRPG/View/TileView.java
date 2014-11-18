@@ -8,8 +8,7 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import org.Hodor.Hodor_the_TRPG.Model.Tile;
-import org.Hodor.Hodor_the_TRPG.Util.MapGenerator;
+import org.Hodor.Hodor_the_TRPG.Model.Map.Tile;
 
 /**
  * Created by jkoike on 11/7/14.
