@@ -25,6 +25,7 @@ public class MapView extends ViewGroup {
     final int DOUBLE_TAP_NS = 250000000;
     ScaleGestureDetector scaleListener;
     GestureDetector detector;
+    TileView selected;
 
     TileView[][] world;
 
@@ -43,6 +44,12 @@ public class MapView extends ViewGroup {
         setup();
     }
 
+    public void interact(TileView tile){
+        if(selected == null){
+            selected = tile;
+        }
+    }
+
     private void setup(){
         size = 65;
         scale = 50;
@@ -54,7 +61,7 @@ public class MapView extends ViewGroup {
         for (int i = 0; i <tiles.length; i++) {
             for (int j = 0; j < tiles[0].length; j++) {
                 world[i][j] = new TileView(getContext());
-                world[i][j].setTile(tiles[i][j]);
+                world[i][j].setTile(tiles[i][j]).setCoords(i, j);
                 addView(world[i][j]);
             }
         }

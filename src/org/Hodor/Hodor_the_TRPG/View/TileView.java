@@ -2,34 +2,62 @@ package org.Hodor.Hodor_the_TRPG.View;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import org.Hodor.Hodor_the_TRPG.Delegate;
 import org.Hodor.Hodor_the_TRPG.Model.Map.Tile;
 import org.Hodor.Hodor_the_TRPG.Util.MapGenerator;
+import org.Hodor.Hodor_the_TRPG.Model.Units.Unit;
+import org.Hodor.Hodor_the_TRPG.R;
+
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Created by jkoike on 11/7/14.
  */
-public class TileView extends View {
+public class TileView extends View implements Observer {
     public Tile getTile() {
         return tile;
     }
 
-    public void setTile(Tile tile) {
+    public TileView setTile(Tile tile) {
         this.tile = tile;
-        paint.setARGB(255,
-                MapGenerator.rampRed(tile.getHeight()),
-                MapGenerator.rampGreen(tile.getHeight()),
-                MapGenerator.rampBlue(tile.getHeight()));
+        bg = getResources().getDrawable(R.drawable.tile);
+        ColorMatrix cm = new ColorMatrix(new float[]{
+                MapGenerator.rampRed(tile.getHeight())/255.0F, 0, 0, 0, 0,
+                0, MapGenerator.rampGreen(tile.getHeight())/255.0F, 0, 0, 0,
+                0, 0, MapGenerator.rampBlue(tile.getHeight())/255.0F, 0, 0,
+                0, 0, 0, 1, 0
+        });
+        bg.setColorFilter(new ColorMatrixColorFilter(cm));
+        setBackground(bg);
+        return this;
     }
+
+    public TileView setCoords(int x, int y){
+        this.x = x;
+        this.y = y;
+        return this;
+    }
+
+    public boolean hasUnit(){
+        return unit == null;
+    }
+
     Tile tile;
-    Paint paint;
+    int x, y;
+    Paint paint, unitPaint;
     boolean touched;
-    GestureDetector detector;
+    Unit unit;
+    Drawable bg;
+    final int MIN_NO_RENDER_SIZE = 33;
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
@@ -45,19 +73,14 @@ public class TileView extends View {
         Log.i("Tile", ""+event.getActionMasked());
         touched ^= true;
         invalidate();
+        Delegate.getController().nextTurn();
         return super.onTouchEvent(event);
     }
 
     private void setup(){
         paint = new Paint();
-        detector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener(){
-            @Override
-            public boolean onSingleTapUp(MotionEvent e) {
-                Log.i("Detector", "Hello!");
-                touched ^= true;
-                return super.onSingleTapUp(e);
-            }
-        });
+        unitPaint = new Paint();
+        Delegate.getController().addObserver(this);
     }
 
     public TileView(Context context) {
@@ -77,10 +100,17 @@ public class TileView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if(touched) {
-            canvas.drawText("Hello", 0, 0, paint);
+        if(getHeight() < MIN_NO_RENDER_SIZE && unit != null){
+            canvas.drawCircle(getWidth()/2.0F, getHeight()/2.0F, getHeight()/2, unitPaint);
         }
-        else
-            canvas.drawColor(paint.getColor());
+
+    }
+
+    @Override
+    public void update(Observable observable, Object data) {
+        unitPaint.setARGB(255, (Delegate.getController().getTurn())?255:0, 0,
+                (Delegate.getController().getTurn())?0:255);
+        this.unit = Delegate.getController().getUnit(this.x, this.y);
+        invalidate();
     }
 }
