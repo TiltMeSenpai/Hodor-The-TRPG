@@ -11,8 +11,8 @@ import android.view.ScaleGestureDetector;
 import android.view.ViewGroup;
 import org.Hodor.Hodor_the_TRPG.Delegate;
 import org.Hodor.Hodor_the_TRPG.GameActivity;
-import org.Hodor.Hodor_the_TRPG.Model.Map;
-import org.Hodor.Hodor_the_TRPG.Model.Tile;
+import org.Hodor.Hodor_the_TRPG.Model.Map.Map;
+import org.Hodor.Hodor_the_TRPG.Model.Map.Tile;
 import org.Hodor.Hodor_the_TRPG.Util.MapGenerator;
 
 /**
