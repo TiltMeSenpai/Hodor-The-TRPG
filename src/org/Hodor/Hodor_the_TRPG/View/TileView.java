@@ -100,7 +100,7 @@ public class TileView extends View implements Observer {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if(getHeight() < MIN_NO_RENDER_SIZE && unit != null){
+        if(unit != null){
             canvas.drawCircle(getWidth()/2.0F, getHeight()/2.0F, getHeight()/2, unitPaint);
         }
 
