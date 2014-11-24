@@ -43,7 +43,7 @@ public class Cli {
             StringBuilder ret = new StringBuilder();
             int i = 1;
             for(Unit unit : controller.getUnits())
-                ret.append(String.format("%d) %s\n", i++, unit.getName()));
+                ret.append(String.format("%d) %s: (%s, %s)\n", i++, unit.getName(), unit.getX(), unit.getY()));
             return ret.toString();
         }
     }
@@ -63,7 +63,28 @@ public class Cli {
     private class Attack implements ReplCommand {
         @Override
         public String execute(MapController controller, String[] args) {
+            Unit attacker = null, attackee = null;
+            for(Unit unit : controller.getUnits())
+                if(unit.getName().contains(args[1]))
+                    attacker = unit;
+            for(Unit unit : controller.getUnits())
+                if(unit.getName().contains(args[2]))
+                    attackee = unit;
+            if(!attacker.attack(attackee))
+                return "Attack Failed!";
             return "";
+        }
+    }
+
+    private class Move implements ReplCommand{
+        @Override
+        public String execute(MapController controller, String[] args) {
+            Unit mUnit;
+            for(Unit unit : controller.getUnits())
+                if(unit.getName().contains(args[1]))
+                    mUnit = unit;
+            
+            if(controller.moveUnit(mUnit, x, y))
         }
     }
 }
