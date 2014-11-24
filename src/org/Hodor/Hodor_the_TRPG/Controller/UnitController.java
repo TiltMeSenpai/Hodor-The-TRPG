@@ -1,5 +1,8 @@
 package org.Hodor.Hodor_the_TRPG.Controller;
 
+import org.Hodor.Hodor_the_TRPG.Model.Items.Armor;
+import org.Hodor.Hodor_the_TRPG.Model.Items.Item;
+import org.Hodor.Hodor_the_TRPG.Model.Items.Weapon;
 import org.Hodor.Hodor_the_TRPG.Model.Map.Map;
 import org.Hodor.Hodor_the_TRPG.Model.Map.Tile;
 import org.Hodor.Hodor_the_TRPG.Model.Units.Archer;
@@ -37,5 +40,28 @@ public class UnitController {
 
         return unit.attack(enemy);
 
+    }
+
+    public boolean equip(Unit unit, Item item){
+        if (item instanceof Weapon){
+            unit.setWeapon((Weapon) item);
+            return true;
+        }
+        else if (item instanceof Armor){
+            unit.setArmor((Armor) item);
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public boolean isDead(Unit unit){
+        if (unit.getCurrentHp()<1){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }

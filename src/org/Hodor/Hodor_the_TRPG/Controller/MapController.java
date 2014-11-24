@@ -34,7 +34,7 @@ public class MapController extends Observable {
 
 
         setTeam1("Targaryen", map);
-        setTeam1("Stark", map);
+        setTeam2("Stark", map);
     }
 
     public Unit getUnit(int x, int y){
@@ -149,12 +149,34 @@ public class MapController extends Observable {
         }
     }
 
-    public boolean attack(Unit unit, Unit enemy){
-        if(team1.contains(unit)&&team2.contains(enemy) || team2.contains(unit)&&team1.contains(enemy)) {
-            return unitController.attack(unit, enemy);
+    public boolean attack(Unit unit, Unit enemy) {
+
+        boolean flag = false;
+
+        if (team1.contains(unit) && team2.contains(enemy) || team2.contains(unit) && team1.contains(enemy)) {
+            if (unitController.attack(unit, enemy)) {
+                if (unitController.isDead(unit)) {
+                    if (team1.contains(unit)) {
+                        team1.remove(unit);
+                    } else {
+                        team2.remove(unit);
+                    }
+                }
+
+                if (unitController.isDead(enemy)) {
+                    if (team1.contains(enemy)) {
+                        team1.remove(enemy);
+                    } else {
+                        team2.remove(enemy);
+                    }
+
+                }
+                flag = true;
+            }
         }
-        return false;
+        return flag;
     }
+
 
     public boolean move(Unit unit, int x, int y){
         return unitController.move(unit, x, y);
@@ -167,6 +189,10 @@ public class MapController extends Observable {
         else{
             return team2Bag;
         }
+    }
+
+    public boolean equip(Unit unit, Item item){
+        return unitController.equip(unit, item);
     }
 
 
