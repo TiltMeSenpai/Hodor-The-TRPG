@@ -74,9 +74,7 @@ public class TileView extends View implements Observer {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         Log.i("Tile", ""+event.getActionMasked());
-        touched ^= true;
-        invalidate();
-        Delegate.getController().nextTurn();
+        Delegate.interact(this);
         return super.onTouchEvent(event);
     }
 
@@ -103,18 +101,30 @@ public class TileView extends View implements Observer {
 
     @Override
     protected void onDraw(Canvas canvas) {
-//        if(unit != null){
-//            canvas.drawCircle(getWidth()/2.0F, getHeight()/2.0F, getHeight()/2, unitPaint);
-//        }
-        canvas.drawText(x+", "+y, getWidth()/2, getHeight()/2, unitPaint);
+        if(unit != null){
+            canvas.drawCircle(getWidth()/2.0F, getHeight()/2.0F, getHeight()/2, unitPaint);
+        }
 
     }
 
     @Override
     public void update(Observable observable, Object data) {
-        unitPaint.setARGB(255, (Delegate.getController().getTurn())?255:0, 0,
-                (Delegate.getController().getTurn())?0:255);
         this.unit = Delegate.getController().getUnit(this.x, this.y);
+        if(this.unit != null){
+            String house = unit.getHouse();
+            if(house.equals("Stark"))
+                unitPaint.setARGB(Unit.houseColors[0][0],Unit.houseColors[0][1],
+                        Unit.houseColors[0][2],Unit.houseColors[0][3]);
+            else if(house.equals("Targaryen"))
+                unitPaint.setARGB(Unit.houseColors[1][0],Unit.houseColors[1][1],
+                        Unit.houseColors[1][2],Unit.houseColors[1][3]);
+            else if(house.equals("Lannister"))
+                unitPaint.setARGB(Unit.houseColors[2][0],Unit.houseColors[2][1],
+                        Unit.houseColors[2][2],Unit.houseColors[2][3]);
+            else if(house.equals("Wildlings"))
+                unitPaint.setARGB(Unit.houseColors[3][0],Unit.houseColors[3][1],
+                        Unit.houseColors[3][2],Unit.houseColors[3][3]);
+        }
         invalidate();
     }
 
@@ -130,6 +140,6 @@ public class TileView extends View implements Observer {
         contextItems.add("Items");
         contextItems.add("End Turn");
         return new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1,
-                (String[])contextItems.toArray());
+                contextItems.toArray(new String[contextItems.size()]));
     }
 }

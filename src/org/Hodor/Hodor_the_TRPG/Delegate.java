@@ -46,11 +46,11 @@ public class Delegate extends Application{
             delegate.menuContents.setAdapter(view.getContextMenu());
             delegate.contextMenu.openDrawer(Gravity.END);
         }
+        delegate.start = null;
     }
-    public static void setContext(Context context){
-        delegate.contextMenu = new DrawerLayout(context);
-        delegate.menuContents = new ListView(context);
-        delegate.contextMenu.addView(delegate.menuContents);
+    public static void setup(Context context, DrawerLayout contextMenu, ListView menuContents){
+        delegate.contextMenu = contextMenu;
+        delegate.menuContents = menuContents;
         Delegate.context = context;
     }
 }

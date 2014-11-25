@@ -107,6 +107,7 @@ public class MapView extends ViewGroup {
             }
         });
         setWillNotDraw(false);
+        Delegate.getController().nextTurn();
     }
 
     @Override
@@ -120,10 +121,8 @@ public class MapView extends ViewGroup {
         float tileOffsetV = Math.max(0,((size-(tilesS/getHeight()))*(computeVerticalScrollOffset()/1000.0f)));
         float partialH = (tileOffsetH - (int)tileOffsetH)*tilesS;
         float partialV = (tileOffsetV - (int)tileOffsetV)*tilesS;
-        Log.i("Rendering", tileOffsetH+" ,"+tileOffsetV+", "+tilesS+", "+tilesS+", "+x+", "+y);
-        Log.i("Rendering", getWidth()/tilesS + " by "+getHeight()/tilesS+" tiles");
-        for(int i = 0; i < getWidth()/tilesS; i++) {
-            for (int j = 0; j < getHeight()/tilesS; j++) {
+        for(int i = 0; i <= getHeight()/tilesS + 1; i++) {
+            for (int j = 0; j <= getWidth()/tilesS + 1; j++) {
                 int y = (int)(i + tileOffsetV), x= (int)(j + tileOffsetH);
                 if(x > world.length - 1 || y > world.length - 1)
                     continue;
@@ -144,8 +143,11 @@ public class MapView extends ViewGroup {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         // Device is in portrait mode
         setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
-        tilesS = Math.max(heightMeasureSpec, widthMeasureSpec)/size;
-        Log.i("Sizes", "Tiles are "+tilesS+" on a side, height is "+getHeight()+", width is "+getWidth());
+        if(widthMeasureSpec + heightMeasureSpec > 0)
+            tilesS = (Math.max(widthMeasureSpec, heightMeasureSpec)/size)*(100/scale);
+        else
+            tilesS = 100;
+        Log.i("Sizes", "Tiles are "+tilesS+" on a side, height is "+heightMeasureSpec+", width is "+widthMeasureSpec);
     }
 
     @Override

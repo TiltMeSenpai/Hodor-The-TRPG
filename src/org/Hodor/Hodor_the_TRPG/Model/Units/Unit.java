@@ -26,13 +26,21 @@ abstract public class Unit {
     protected ArrayList<Command> commandlist;
     protected Weapon weapon=null;
     protected Armor armor=null;
-    private Random generator = new Random();
+    private Random generator;
+
+    public static int[][] houseColors = new int[][]{
+            {255, 0, 0, 255},
+            {255, 255, 0, 0},
+            {255, 255, 255, 0},
+            {255, 255, 255, 255}
+    };
 
     public Unit(int x, int y, String name, String house){
         this.x=x;
         this.y=y;
         this.name=name;
         this.house=house;
+        this.generator=new Random();
 
     }
     public void move(int x, int y){

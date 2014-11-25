@@ -38,7 +38,7 @@ public class MapController extends Observable {
 
         setTeam1("Targaryen", map);
         setTeam2("Stark", map);
-        turn = true;
+        turn = false;
     }
 
     public Unit getUnit(int x, int y){
@@ -118,6 +118,8 @@ public class MapController extends Observable {
         } else {
             System.out.println("Units not created.");
         }
+        setChanged();
+        notifyObservers();
     }
 
     public void setTeam2(String house, Map map){
@@ -160,6 +162,8 @@ public class MapController extends Observable {
         } else {
             System.out.println("Units not created.");
         }
+        setChanged();
+        notifyObservers();
     }
 
     public boolean attack(Unit unit, Unit enemy) {
