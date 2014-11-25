@@ -194,6 +194,8 @@ public class MapView extends ViewGroup {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
+        if(Delegate.isMoving())
+            return false;
         if(firstTapTime > 0 && System.nanoTime() - firstTapTime < DOUBLE_TAP_NS) {
             firstTapTime = System.nanoTime();
             return false;
@@ -205,9 +207,10 @@ public class MapView extends ViewGroup {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if(event.getActionMasked() == MotionEvent.ACTION_DOWN
+        if(Delegate.isMoving() ||
+                (event.getActionMasked() == MotionEvent.ACTION_DOWN
                 && SystemClock.currentThreadTimeMillis() - firstTapTime > 0
-                && SystemClock.currentThreadTimeMillis() - firstTapTime < DOUBLE_TAP_NS) {
+                && SystemClock.currentThreadTimeMillis() - firstTapTime < DOUBLE_TAP_NS)) {
             return false;
         }
         if(System.nanoTime() - firstTapTime > DOUBLE_TAP_NS)

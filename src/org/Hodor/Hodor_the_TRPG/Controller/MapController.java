@@ -168,7 +168,6 @@ public class MapController extends Observable {
 
     public boolean attack(Unit unit, Unit enemy) {
         setChanged();
-        notifyObservers();
         boolean flag = false;
 
         if (team1.contains(unit) && team2.contains(enemy) || team2.contains(unit) && team1.contains(enemy)) {
@@ -203,12 +202,18 @@ public class MapController extends Observable {
                 throw new RuntimeException("Game Over! Player " + ((team1.size() == 0) ? 1 : 2) + " Loses!");
             }
         }
+        notifyObservers();
         return flag;
     }
 
 
     public boolean move(Unit unit, int x, int y){
-        return unitController.move(unit, x, y);
+        setChanged();
+        if(!((turn)?team1:team2).contains(unit))
+            return false;
+        boolean flag = unitController.move(unit, x, y);
+        notifyObservers();
+        return flag;
     }
 
     public ArrayList<Item> getItems(){

@@ -7,7 +7,6 @@ import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -73,7 +72,6 @@ public class TileView extends View implements Observer {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        Log.i("Tile", ""+event.getActionMasked());
         Delegate.interact(this);
         return super.onTouchEvent(event);
     }
@@ -141,5 +139,17 @@ public class TileView extends View implements Observer {
         contextItems.add("End Turn");
         return new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1,
                 contextItems.toArray(new String[contextItems.size()]));
+    }
+
+    public Unit getUnit(){
+        return unit;
+    }
+
+    public int getTileX(){
+        return x;
+    }
+
+    public int getTileY(){
+        return y;
     }
 }
