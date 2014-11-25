@@ -102,7 +102,8 @@ abstract public class Unit {
         }
         // If equipping, change the str to match the new weapon's stat.
         else{
-            this.str-=this.weapon.getStr();
+            if(this.weapon != null)
+                this.str-=this.weapon.getStr();
             this.weapon=weapon;
             this.str+=weapon.getStr();
         }
@@ -142,6 +143,14 @@ abstract public class Unit {
         level++;
 
 
+    }
+
+    public boolean canMove(){
+        return movement > 0;
+    }
+
+    public boolean canAttack(){
+        return true;
     }
 
     abstract public boolean attack(Unit unit);

@@ -1,7 +1,5 @@
 package org.Hodor.Hodor_the_TRPG.Util;
 
-import android.util.Log;
-
 import java.util.Random;
 
 /**
@@ -15,7 +13,6 @@ public class MapGenerator {
     public MapGenerator(int size){
         map = new int[size][size];
         random = new Random();
-        Log.wtf("MapGen", "I'm making a new map");
     }
 
     private synchronized void linearInterpolate(int topX, int topY, int h, int w, float var){

@@ -1,34 +1,30 @@
 package org.Hodor.Hodor_the_TRPG;
 
 import android.app.Application;
-<<<<<<< Updated upstream
-import org.Hodor.Hodor_the_TRPG.Model.Map.Map;
-=======
+import android.content.Context;
+import android.support.v4.widget.DrawerLayout;
+import android.view.Gravity;
+import android.widget.ListView;
 import org.Hodor.Hodor_the_TRPG.Controller.MapController;
 import org.Hodor.Hodor_the_TRPG.Model.Map.Map;
-import org.Hodor.Hodor_the_TRPG.Model.Units.Warrior;
->>>>>>> Stashed changes
 import org.Hodor.Hodor_the_TRPG.Util.MapGenerator;
+import org.Hodor.Hodor_the_TRPG.View.TileView;
 
 /**
  * Created by jkoike on 11/18/14.
  */
 public class Delegate extends Application{
     static IDelegate delegate;
+    public static Context context;
     private class IDelegate{
         Map map;
         MapController controller;
+        DrawerLayout contextMenu;
+        ListView menuContents;
+        TileView start;
         public IDelegate(){
             map = new Map(new MapGenerator(65).generate());
             controller = new MapController(map);
-            controller.addUnit(new Warrior(5, 5, "Warrior", "Stark", 0,0,0,0,0,0));
-            controller.addUnit(new Warrior(2, 5, "Warrior", "Stark", 0,0,0,0,0,0));
-            controller.addUnit(new Warrior(7, 8, "Warrior", "Stark", 0,0,0,0,0,0));
-            controller.nextTurn();
-            controller.addUnit(new Warrior(5, 4, "Warrior", "Stark", 0,0,0,0,0,0));
-            controller.addUnit(new Warrior(2, 7, "Warrior", "Stark", 0,0,0,0,0,0));
-            controller.addUnit(new Warrior(10, 8, "Warrior", "Stark", 0,0,0,0,0,0));
-            controller.nextTurn();
         }
     }
     public Delegate(){
@@ -41,5 +37,20 @@ public class Delegate extends Application{
     }
     public static MapController getController(){
         return delegate.controller;
+    }
+    public static DrawerLayout getContextMenu(){ return  delegate.contextMenu;}
+    public static Context getAppContext() { return context; }
+    public static void interact(TileView view){
+        if(delegate.start == null){
+            delegate.start = view;
+            delegate.menuContents.setAdapter(view.getContextMenu());
+            delegate.contextMenu.openDrawer(Gravity.END);
+        }
+    }
+    public static void setContext(Context context){
+        delegate.contextMenu = new DrawerLayout(context);
+        delegate.menuContents = new ListView(context);
+        delegate.contextMenu.addView(delegate.menuContents);
+        Delegate.context = context;
     }
 }

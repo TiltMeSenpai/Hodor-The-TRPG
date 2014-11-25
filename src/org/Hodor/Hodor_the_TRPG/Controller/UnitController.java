@@ -4,12 +4,7 @@ import org.Hodor.Hodor_the_TRPG.Model.Items.Armor;
 import org.Hodor.Hodor_the_TRPG.Model.Items.Item;
 import org.Hodor.Hodor_the_TRPG.Model.Items.Weapon;
 import org.Hodor.Hodor_the_TRPG.Model.Map.Map;
-import org.Hodor.Hodor_the_TRPG.Model.Map.Tile;
-import org.Hodor.Hodor_the_TRPG.Model.Units.Archer;
-import org.Hodor.Hodor_the_TRPG.Model.Units.Rogue;
-import org.Hodor.Hodor_the_TRPG.Model.Units.Special;
 import org.Hodor.Hodor_the_TRPG.Model.Units.Unit;
-import org.Hodor.Hodor_the_TRPG.Model.Units.Warrior;
 
 import java.util.ArrayList;
 

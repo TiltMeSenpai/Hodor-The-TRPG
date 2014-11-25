@@ -19,7 +19,7 @@ import org.Hodor.Hodor_the_TRPG.Util.MapGenerator;
  * Created by jkoike on 11/7/14.
  */
 public class MapView extends ViewGroup {
-    float x, y, scale, tilesOnH, tilesOnV;
+    float x, y, scale, tilesS;
     int size;
     long firstTapTime;
     final int DOUBLE_TAP_NS = 250000000;
@@ -58,7 +58,7 @@ public class MapView extends ViewGroup {
             map = Delegate.getMap();
         Tile[][] tiles = map.getMap();
         world = new TileView[tiles.length][tiles[0].length];
-        for (int i = 0; i <tiles.length; i++) {
+        for (int i = 0; i < tiles.length; i++) {
             for (int j = 0; j < tiles[0].length; j++) {
                 world[i][j] = new TileView(getContext());
                 world[i][j].setTile(tiles[i][j]).setCoords(i, j);
@@ -76,8 +76,7 @@ public class MapView extends ViewGroup {
 
                 // Don't let the object get too small or too large.
                 scale = Math.max(1f, Math.min(scale, 100.0f));
-                tilesOnV = size*(scale/100) * ((float)getHeight()/getWidth());
-                tilesOnH = size*(scale/100) * ((float)getWidth()/getHeight());
+                tilesS = (Math.max(getWidth(), getHeight())/size)*(100/scale);
 
                 return true;
             }
@@ -115,20 +114,23 @@ public class MapView extends ViewGroup {
         for(TileView[] row : world)
             for(TileView view : row)
                 view.setVisibility(INVISIBLE);
-        this.x += ix/getWidth();
-        this.y += iy/getHeight();
-        float tileOffsetH = Math.max(0,((size-tilesOnH)*(computeHorizontalScrollOffset()/100.0f)));
-        float tileOffsetV = Math.max(0,((size-tilesOnV)*(computeVerticalScrollOffset()/100.0f)));
-        int tileH = (int)(getWidth()/tilesOnH);
-        int tileV = (int)(getHeight()/tilesOnV);
-        for(int i = 0; i < tilesOnV; i++) {
-            for (int j = 0; j < tilesOnH; j++) {
+        this.x += ix/1000;
+        this.y += iy/1000;
+        float tileOffsetH = Math.max(0,((size-(tilesS/getWidth()))*(computeHorizontalScrollOffset()/1000.0f)));
+        float tileOffsetV = Math.max(0,((size-(tilesS/getHeight()))*(computeVerticalScrollOffset()/1000.0f)));
+        float partialH = (tileOffsetH - (int)tileOffsetH)*tilesS;
+        float partialV = (tileOffsetV - (int)tileOffsetV)*tilesS;
+        Log.i("Rendering", tileOffsetH+" ,"+tileOffsetV+", "+tilesS+", "+tilesS+", "+x+", "+y);
+        Log.i("Rendering", getWidth()/tilesS + " by "+getHeight()/tilesS+" tiles");
+        for(int i = 0; i < getWidth()/tilesS; i++) {
+            for (int j = 0; j < getHeight()/tilesS; j++) {
                 int y = (int)(i + tileOffsetV), x= (int)(j + tileOffsetH);
-                x = (x>world.length-1)?world.length-1:x;
-                y = (y>world[0].length-1)?world[0].length-1:y;
+                if(x > world.length - 1 || y > world.length - 1)
+                    continue;
                 try {
                     world[x][y].setVisibility(VISIBLE);
-                    world[x][y].layout(j * tileH, i * tileV, (j + 1) * tileH, (i + 1) * tileV);
+                    world[x][y].layout((int)((j * tilesS) - partialH), (int)((i * tilesS) - partialV),
+                            (int)(((j + 1) * tilesS) - partialH), (int)(((i + 1) * tilesS) - partialV));
                 }
                 catch (IndexOutOfBoundsException e){
                     Log.wtf("DEBUG", "Something messed up on " + world[x][y] + " at " + x + ", " + y);
@@ -141,21 +143,19 @@ public class MapView extends ViewGroup {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         // Device is in portrait mode
-        if (heightMeasureSpec > widthMeasureSpec)
-            setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
-        // Device is in landscape mode
-        else if (widthMeasureSpec > heightMeasureSpec)
-            setMeasuredDimension(heightMeasureSpec, widthMeasureSpec);
+        setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
+        tilesS = Math.max(heightMeasureSpec, widthMeasureSpec)/size;
+        Log.i("Sizes", "Tiles are "+tilesS+" on a side, height is "+getHeight()+", width is "+getWidth());
     }
 
     @Override
     protected int computeHorizontalScrollRange() {
-        return 100;
+        return 1000;
     }
 
     @Override
     protected int computeVerticalScrollRange() {
-        return 100;
+        return 1000;
     }
 
     @Override

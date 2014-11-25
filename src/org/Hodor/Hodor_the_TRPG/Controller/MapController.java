@@ -1,10 +1,13 @@
 package org.Hodor.Hodor_the_TRPG.Controller;
 
+import android.content.Intent;
+import org.Hodor.Hodor_the_TRPG.Delegate;
 import org.Hodor.Hodor_the_TRPG.Model.Items.Armor;
 import org.Hodor.Hodor_the_TRPG.Model.Items.Item;
 import org.Hodor.Hodor_the_TRPG.Model.Items.Weapon;
 import org.Hodor.Hodor_the_TRPG.Model.Map.Map;
 import org.Hodor.Hodor_the_TRPG.Model.Units.Unit;
+import org.Hodor.Hodor_the_TRPG.View.GameOverActivity;
 
 import java.util.ArrayList;
 import java.util.Observable;
@@ -30,15 +33,20 @@ public class MapController extends Observable {
         unitController = new UnitController();
         team1Bag = new ArrayList<Item>();
         team2Bag = new ArrayList<Item>();
-
-
+        team1 = new ArrayList<Unit>();
+        team2 = new ArrayList<Unit>();
 
         setTeam1("Targaryen", map);
         setTeam2("Stark", map);
+        turn = true;
     }
 
     public Unit getUnit(int x, int y){
-        for(Unit unit : ((turn)?model.getP1units():model.getP2units())){
+        for(Unit unit : (team1)){
+            if(unit.getX() == x && unit.getY() == y)
+                return unit;
+        }
+        for(Unit unit : (team2)){
             if(unit.getX() == x && unit.getY() == y)
                 return unit;
         }
@@ -47,7 +55,10 @@ public class MapController extends Observable {
 
     public ArrayList<Unit> getUnits(){
         return ((turn)?team1:team2);
+    }
 
+    public ArrayList<Unit> getEUnits(){
+        return ((!turn)?team1:team2);
     }
 
 //    public MapController addUnit(Unit unit){
@@ -58,6 +69,8 @@ public class MapController extends Observable {
     public void nextTurn(){
         setChanged();
         turn ^= true;
+        if(getUnits().size() == 0 || getEUnits().size() == 0)
+            throw new RuntimeException("Game Over! Player "+((getUnits().size() == 0)?1:2)+" Loses!");
         notifyObservers();
     }
 
@@ -66,7 +79,7 @@ public class MapController extends Observable {
     }
 
     public void setTeam1(String house, Map map){
-
+        turn = true;
         if (house.equals("Stark")) {
             team1.add(new org.Hodor.Hodor_the_TRPG.Model.Units.Warrior(1, 1, "Ned", "Stark", 100, 22, 15, 10, 6, 1));
             team1.add(new org.Hodor.Hodor_the_TRPG.Model.Units.Warrior(0, 1, "Rob", "Stark", 105, 18, 16, 10, 6, 1));
@@ -108,7 +121,7 @@ public class MapController extends Observable {
     }
 
     public void setTeam2(String house, Map map){
-
+        turn = false;
         if (house.equals("Stark")) {
             team2.add(new org.Hodor.Hodor_the_TRPG.Model.Units.Warrior(1, 1, "Ned", "Stark", 100, 22, 15, 10, 6, 1));
             team2.add(new org.Hodor.Hodor_the_TRPG.Model.Units.Warrior(0, 1, "Rob", "Stark", 105, 18, 16, 10, 6, 1));
@@ -150,7 +163,8 @@ public class MapController extends Observable {
     }
 
     public boolean attack(Unit unit, Unit enemy) {
-
+        setChanged();
+        notifyObservers();
         boolean flag = false;
 
         if (team1.contains(unit) && team2.contains(enemy) || team2.contains(unit) && team1.contains(enemy)) {
@@ -172,6 +186,17 @@ public class MapController extends Observable {
 
                 }
                 flag = true;
+            }
+        }
+        if(team1.size() == 0 || team2.size() == 0) {
+            try{
+                Delegate.getMap();
+                Intent intent = new Intent(Delegate.getAppContext(), GameOverActivity.class);
+                intent.putExtra("GameOverMessage", "Game Over! Player " + ((team1.size() == 0) ? 1 : 2) + " Loses!");
+                Delegate.getAppContext().startActivity(intent);
+            }
+            catch (NullPointerException e) {
+                throw new RuntimeException("Game Over! Player " + ((team1.size() == 0) ? 1 : 2) + " Loses!");
             }
         }
         return flag;
