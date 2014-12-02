@@ -7,6 +7,7 @@ import org.Hodor.Hodor_the_TRPG.Model.Items.Item;
 import org.Hodor.Hodor_the_TRPG.Model.Items.Weapon;
 import org.Hodor.Hodor_the_TRPG.Model.Map.Map;
 import org.Hodor.Hodor_the_TRPG.Model.Units.Unit;
+import org.Hodor.Hodor_the_TRPG.Util.Pathfinder;
 
 import java.util.ArrayList;
 
@@ -23,11 +24,11 @@ public class UnitController {
     }
 
     public boolean move(Unit unit, int endX, int endY) {
-        Log.i("Moves", endX+", "+endY);
-        Log.i("Moves", Delegate.getMap().getVertices().keySet().toString());
         if(!Delegate.getMap().getVertices().containsKey(endX+", "+endY)){
             return false;
         }
+        Log.i("Moving "+unit.getName(), new Pathfinder(endX, endY, Delegate.getHead()
+        ).run().toString());
         unit.move(endX, endY);
         return true;
     }
@@ -53,11 +54,6 @@ public class UnitController {
     }
 
     public boolean isDead(Unit unit){
-        if (unit.getCurrentHp()<1){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return unit.getCurrentHp() < 1;
     }
 }

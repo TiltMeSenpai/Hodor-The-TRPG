@@ -37,6 +37,7 @@ public class Delegate extends Application{
         TileView start;
         MenuAction[] actions;
         MenuAction action;
+        Vertex head;
         public IDelegate(){
             map = new Map(new MapUtils(65).generate());
             controller = new MapController(map);
@@ -82,6 +83,10 @@ public class Delegate extends Application{
         return tmp;
     }
 
+    public static Vertex getHead(){
+        return delegate.head;
+    }
+
     public static void setup(Context context, final DrawerLayout contextMenu, ListView menuContents, MapView mapView){
         delegate.contextMenu = contextMenu;
         delegate.menuContents = menuContents;
@@ -91,13 +96,14 @@ public class Delegate extends Application{
                 String action = ((TextView)view).getText().toString();
                 if (action.equals("Move")) {
                     getMap().resetVertices();
-                    Log.i(delegate.start.getUnit().getName()+" "+delegate.start.getUnit().getMovement(), new Vertex(
+                    delegate.head = new Vertex(
                             delegate.start.getTileX(),
                             delegate.start.getTileY(),
                             delegate.start.getUnit().getMovement()).generate(
                                 delegate.map,
                                 delegate.start.getUnit().getMaxZ()
-                    ).toString());
+                    );
+                    Log.i(delegate.start.getUnit().getName(), delegate.head.toString());
                     delegate.controller.invalidate();
                     delegate.action = delegate.actions[0];
                     contextMenu.closeDrawer(Gravity.END);
