@@ -13,7 +13,7 @@ import org.Hodor.Hodor_the_TRPG.Delegate;
 import org.Hodor.Hodor_the_TRPG.GameActivity;
 import org.Hodor.Hodor_the_TRPG.Model.Map.Map;
 import org.Hodor.Hodor_the_TRPG.Model.Map.Tile;
-import org.Hodor.Hodor_the_TRPG.Util.MapGenerator;
+import org.Hodor.Hodor_the_TRPG.Util.MapUtils;
 
 /**
  * Created by jkoike on 11/7/14.
@@ -51,9 +51,9 @@ public class MapView extends ViewGroup {
     }
 
     private void setup(){
-        size = 65;
+        size = 33;
         scale = 50;
-        Map map= new Map(new MapGenerator(65).generate());
+        Map map= new Map(new MapUtils(65).generate());
         if( getContext() instanceof GameActivity)
             map = Delegate.getMap();
         Tile[][] tiles = map.getMap();

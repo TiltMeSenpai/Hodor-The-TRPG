@@ -1,11 +1,9 @@
 package org.Hodor.Hodor_the_TRPG.View;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
-import android.graphics.Paint;
+import android.graphics.*;
 import android.graphics.drawable.Drawable;
+import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,7 +13,7 @@ import org.Hodor.Hodor_the_TRPG.Delegate;
 import org.Hodor.Hodor_the_TRPG.Model.Map.Tile;
 import org.Hodor.Hodor_the_TRPG.Model.Units.Unit;
 import org.Hodor.Hodor_the_TRPG.R;
-import org.Hodor.Hodor_the_TRPG.Util.MapGenerator;
+import org.Hodor.Hodor_the_TRPG.Util.MapUtils;
 
 import java.util.ArrayList;
 import java.util.Observable;
@@ -25,6 +23,8 @@ import java.util.Observer;
  * Created by jkoike on 11/7/14.
  */
 public class TileView extends View implements Observer {
+    static Paint selectedPaint = new Paint();
+    ColorMatrix tm, cm;
     public Tile getTile() {
         return tile;
     }
@@ -32,12 +32,13 @@ public class TileView extends View implements Observer {
     public TileView setTile(Tile tile) {
         this.tile = tile;
         bg = getResources().getDrawable(R.drawable.tile);
-        ColorMatrix cm = new ColorMatrix(new float[]{
-                MapGenerator.rampRed(tile.getHeight())/255.0F, 0, 0, 0, 0,
-                0, MapGenerator.rampGreen(tile.getHeight())/255.0F, 0, 0, 0,
-                0, 0, MapGenerator.rampBlue(tile.getHeight())/255.0F, 0, 0,
+        tm = new ColorMatrix(new float[]{
+                MapUtils.rampRed(tile.getHeight())/255.0F, 0, 0, 0, 0,
+                0, MapUtils.rampGreen(tile.getHeight())/255.0F, 0, 0, 0,
+                0, 0, MapUtils.rampBlue(tile.getHeight())/255.0F, 0, 0,
                 0, 0, 0, 1, 0
         });
+        cm = new ColorMatrix(tm);
         bg.setColorFilter(new ColorMatrixColorFilter(cm));
         setBackground(bg);
         return this;
@@ -80,6 +81,7 @@ public class TileView extends View implements Observer {
         paint = new Paint();
         unitPaint = new Paint();
         Delegate.getController().addObserver(this);
+        selectedPaint.setARGB(127, 255, 255, 255);
     }
 
     public TileView(Context context) {
@@ -102,6 +104,9 @@ public class TileView extends View implements Observer {
         if(unit != null){
             canvas.drawCircle(getWidth()/2.0F, getHeight()/2.0F, getHeight()/2, unitPaint);
         }
+        canvas.drawText(""+tile.getHeight(), getHeight()/2, getWidth()/2, new TextPaint());
+        if(Delegate.getMap().getVertices().containsKey(x+", "+y))
+            canvas.drawRect(0, 0, getWidth(), getHeight(), selectedPaint);
 
     }
 
@@ -128,7 +133,7 @@ public class TileView extends View implements Observer {
 
     public ListAdapter getContextMenu(){
         ArrayList<String> contextItems = new ArrayList<String>();
-        if(this.unit != null){
+        if(Delegate.getController().getUnits().contains(this.unit)){
             if(this.unit.canMove())
                 contextItems.add("Move");
             if(this.unit.canAttack())

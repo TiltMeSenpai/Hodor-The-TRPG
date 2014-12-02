@@ -25,4 +25,9 @@ public abstract class Item {
     public abstract void execute(Unit unit);
     public abstract Item equip(Unit unit);
     public abstract Item unequip(Unit unit);
+
+    @Override
+    public String toString() {
+        return getName();
+    }
 }

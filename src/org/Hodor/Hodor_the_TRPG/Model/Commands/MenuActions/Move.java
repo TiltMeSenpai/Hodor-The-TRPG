@@ -12,6 +12,9 @@ public class Move extends MenuAction {
     @Override
     public void execute(MapController controller,TileView a, TileView b) {
         if(!controller.move(a.getUnit(), b.getTileX(), b.getTileY()))
-            Toast.makeText(Delegate.context, "Move Failed", Toast.LENGTH_LONG).show();
+            Toast.makeText(Delegate.context, "Move to ("+b.getTileX()+", "+
+                    b.getTileY()+") Failed", Toast.LENGTH_LONG).show();
+        Delegate.getController().invalidate();
+        Delegate.getMap().resetVertices();
     }
 }

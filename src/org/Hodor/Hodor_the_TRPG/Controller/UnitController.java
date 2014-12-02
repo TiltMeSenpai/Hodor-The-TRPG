@@ -1,5 +1,7 @@
 package org.Hodor.Hodor_the_TRPG.Controller;
 
+import android.util.Log;
+import org.Hodor.Hodor_the_TRPG.Delegate;
 import org.Hodor.Hodor_the_TRPG.Model.Items.Armor;
 import org.Hodor.Hodor_the_TRPG.Model.Items.Item;
 import org.Hodor.Hodor_the_TRPG.Model.Items.Weapon;
@@ -21,14 +23,13 @@ public class UnitController {
     }
 
     public boolean move(Unit unit, int endX, int endY) {
-        boolean flag = false;
-        //if checkPath()::
-        if (unit.getMovement() >= Math.abs(endX - unit.getX()) + Math.abs(endY - unit.getY())) {
-            unit.move(endX, endY);
-            flag = true;
+        Log.i("Moves", endX+", "+endY);
+        Log.i("Moves", Delegate.getMap().getVertices().keySet().toString());
+        if(!Delegate.getMap().getVertices().containsKey(endX+", "+endY)){
+            return false;
         }
-
-        return flag;
+        unit.move(endX, endY);
+        return true;
     }
 
     public boolean attack(Unit unit, Unit enemy){

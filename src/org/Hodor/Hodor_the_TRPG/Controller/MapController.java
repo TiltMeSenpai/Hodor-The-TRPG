@@ -68,6 +68,8 @@ public class MapController extends Observable {
 
     public void nextTurn(){
         setChanged();
+        for(Unit unit : getUnits())
+            unit.setUsedMoves(0);
         turn ^= true;
         if(getUnits().size() == 0 || getEUnits().size() == 0)
             throw new RuntimeException("Game Over! Player "+((getUnits().size() == 0)?1:2)+" Loses!");
@@ -229,8 +231,8 @@ public class MapController extends Observable {
         return unitController.equip(unit, item);
     }
 
-
-
-
-
+    public void invalidate(){
+        setChanged();
+        notifyObservers();
+    }
 }

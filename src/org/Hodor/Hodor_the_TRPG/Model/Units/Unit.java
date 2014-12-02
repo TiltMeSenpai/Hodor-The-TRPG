@@ -20,6 +20,7 @@ abstract public class Unit {
     protected int def;
     protected int evasion;
     protected int movement;
+    protected int usedMoves = 0, maxZ = 1;
     protected int range;
     protected int level;
     protected int xp;
@@ -28,11 +29,11 @@ abstract public class Unit {
     protected Armor armor=null;
     private Random generator;
 
-    public static int[][] houseColors = new int[][]{
-            {255, 0, 0, 255},
-            {255, 255, 0, 0},
-            {255, 255, 255, 0},
-            {255, 255, 255, 255}
+    public static int[][] houseColors = new int[][]{ // Listed in 0-255 ARGB form
+            {255, 0, 0, 255}, // Stark
+            {255, 255, 0, 0}, // Targaryen
+            {255, 255, 255, 0}, // Lannister
+            {255, 255, 255, 255} //Wildlings
     };
 
     public Unit(int x, int y, String name, String house){
@@ -97,6 +98,10 @@ abstract public class Unit {
     public void setRange(int range){this.range=range;}
     public void setLevel(int level){this.level=level;}
     public void setXp(int xp){this.xp=xp;}
+    public void setUsedMoves(int usedMoves) {
+        this.usedMoves = usedMoves;
+    }
+
     public void setWeapon(Weapon weapon){
         // If unequipping.
         if (weapon==null){
@@ -151,6 +156,10 @@ abstract public class Unit {
         level++;
 
 
+    }
+
+    public int getMaxZ() {
+        return maxZ;
     }
 
     public boolean canMove(){

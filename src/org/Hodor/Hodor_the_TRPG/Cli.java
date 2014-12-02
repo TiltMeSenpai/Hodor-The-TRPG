@@ -4,7 +4,7 @@ import org.Hodor.Hodor_the_TRPG.Controller.MapController;
 import org.Hodor.Hodor_the_TRPG.Model.Items.Item;
 import org.Hodor.Hodor_the_TRPG.Model.Map.Map;
 import org.Hodor.Hodor_the_TRPG.Model.Units.Unit;
-import org.Hodor.Hodor_the_TRPG.Util.MapGenerator;
+import org.Hodor.Hodor_the_TRPG.Util.MapUtils;
 
 import java.util.HashMap;
 import java.util.Scanner;
@@ -20,7 +20,7 @@ public class Cli {
     private static class CliRepl implements Runnable {
         @Override
         public void run() {
-            Map map = new Map(new MapGenerator(5).generate());
+            Map map = new Map(new MapUtils(5).generate());
             MapController mc = new MapController(map);
             Scanner scanner = new Scanner(System.in);
             HashMap<Commands, ReplCommand> commands = new HashMap<Commands, ReplCommand>();

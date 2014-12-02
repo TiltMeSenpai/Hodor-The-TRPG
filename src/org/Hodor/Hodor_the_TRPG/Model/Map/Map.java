@@ -1,8 +1,10 @@
 package org.Hodor.Hodor_the_TRPG.Model.Map;
 
 import org.Hodor.Hodor_the_TRPG.Model.Units.Unit;
+import org.Hodor.Hodor_the_TRPG.Util.Vertex;
 
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 /**
  * Created by jkoike on 11/5/14.
@@ -10,6 +12,7 @@ import java.util.ArrayList;
 public class Map {
     private Tile[][] map;
     private ArrayList<Unit> p1units,p2units;
+    private TreeMap<String, Vertex> vertices;
     public Map(int[][] world){
         p1units = new ArrayList<Unit>();
         p2units = new ArrayList<Unit>();
@@ -19,6 +22,7 @@ public class Map {
                 map[i][j] = new Ground(world[i][j]);
             }
         }
+        vertices = new TreeMap<String, Vertex>();
     }
 
     public Tile[][] getMap() {
@@ -31,5 +35,17 @@ public class Map {
 
     public ArrayList<Unit> getP2units() {
         return p2units;
+    }
+
+    public Tile get(int x, int y){
+        return map[x][y];
+    }
+
+    public TreeMap<String, Vertex> getVertices() {
+        return vertices;
+    }
+
+    public void resetVertices(){
+        vertices = new TreeMap<String, Vertex>();
     }
 }
