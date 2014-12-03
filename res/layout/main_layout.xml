@@ -7,7 +7,8 @@
     android:layout_height="match_parent">
     <org.Hodor.Hodor_the_TRPG.View.MapView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:id="@+id/map_view"/>
     <ListView android:id="@+id/right_drawer"
               android:layout_width="240dp"
               android:layout_height="match_parent"

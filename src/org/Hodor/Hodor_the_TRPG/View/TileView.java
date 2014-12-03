@@ -1,7 +1,10 @@
 package org.Hodor.Hodor_the_TRPG.View;
 
 import android.content.Context;
-import android.graphics.*;
+import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
@@ -24,6 +27,7 @@ import java.util.Observer;
  */
 public class TileView extends View implements Observer {
     static Paint selectedPaint = new Paint();
+    static TextPaint textPaint = new TextPaint();
     ColorMatrix tm, cm;
     public Tile getTile() {
         return tile;
@@ -81,7 +85,7 @@ public class TileView extends View implements Observer {
         paint = new Paint();
         unitPaint = new Paint();
         Delegate.getController().addObserver(this);
-        selectedPaint.setARGB(127, 255, 255, 255);
+        selectedPaint.setARGB(100, 255, 255, 0);
     }
 
     public TileView(Context context) {
@@ -101,12 +105,11 @@ public class TileView extends View implements Observer {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        if(Delegate.getMap().getVertices().containsKey(x+", "+y))
+            canvas.drawRect(0, 0, getWidth(), getHeight(), selectedPaint);
         if(unit != null){
             canvas.drawCircle(getWidth()/2.0F, getHeight()/2.0F, getHeight()/2, unitPaint);
         }
-        canvas.drawText(""+tile.getHeight(), getHeight()/2, getWidth()/2, new TextPaint());
-        if(Delegate.getMap().getVertices().containsKey(x+", "+y))
-            canvas.drawRect(0, 0, getWidth(), getHeight(), selectedPaint);
 
     }
 
@@ -114,19 +117,24 @@ public class TileView extends View implements Observer {
     public void update(Observable observable, Object data) {
         this.unit = Delegate.getController().getUnit(this.x, this.y);
         if(this.unit != null){
-            String house = unit.getHouse();
-            if(house.equals("Stark"))
-                unitPaint.setARGB(Unit.houseColors[0][0],Unit.houseColors[0][1],
-                        Unit.houseColors[0][2],Unit.houseColors[0][3]);
-            else if(house.equals("Targaryen"))
-                unitPaint.setARGB(Unit.houseColors[1][0],Unit.houseColors[1][1],
-                        Unit.houseColors[1][2],Unit.houseColors[1][3]);
-            else if(house.equals("Lannister"))
-                unitPaint.setARGB(Unit.houseColors[2][0],Unit.houseColors[2][1],
-                        Unit.houseColors[2][2],Unit.houseColors[2][3]);
-            else if(house.equals("Wildlings"))
-                unitPaint.setARGB(Unit.houseColors[3][0],Unit.houseColors[3][1],
-                        Unit.houseColors[3][2],Unit.houseColors[3][3]);
+            switch (unit.getHouse()) {
+                case Stark:
+                    unitPaint.setARGB(Unit.houseColors[0][0], Unit.houseColors[0][1],
+                        Unit.houseColors[0][2], Unit.houseColors[0][3]);
+                    break;
+                case Targaryen:
+                    unitPaint.setARGB(Unit.houseColors[1][0], Unit.houseColors[1][1],
+                        Unit.houseColors[1][2], Unit.houseColors[1][3]);
+                    break;
+                case Lannister:
+                    unitPaint.setARGB(Unit.houseColors[2][0], Unit.houseColors[2][1],
+                        Unit.houseColors[2][2], Unit.houseColors[2][3]);
+                    break;
+                case Wildlings:
+                    unitPaint.setARGB(Unit.houseColors[3][0], Unit.houseColors[3][1],
+                        Unit.houseColors[3][2], Unit.houseColors[3][3]);
+                    break;
+            }
         }
         invalidate();
     }

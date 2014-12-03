@@ -1,12 +1,14 @@
 package org.Hodor.Hodor_the_TRPG.Model.Units;
 
+import org.Hodor.Hodor_the_TRPG.Model.House;
+
 /**
  * Created by Jason on 11/12/14.
  */
 public class Warrior extends Unit{
 
-    public Warrior(int x, int y, String name, String house, int hp, int str, int def, int evasion, int movement, int range){
-        super(x,y,name,house);
+    public Warrior(int x, int y, String name, House house, int hp, int str, int def, int evasion, int movement, int range){
+        super(x,y,name,house, null);
         this.maxHp = hp;
         this.currentHp = hp;
         this.str = str;

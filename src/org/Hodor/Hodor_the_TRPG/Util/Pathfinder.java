@@ -34,7 +34,7 @@ public class Pathfinder {
 
     public ArrayList<Vertex> run(){
         resetPoints(start);
-        TreeSet<Vertex> closedSet = new TreeSet<Vertex>();
+        Set<Vertex> closedSet = new HashSet<Vertex>();
         HashMap<Vertex, Integer> gScore = new HashMap<Vertex, Integer>();
         HashMap<Vertex, Vertex> cameFrom = new HashMap<Vertex, Vertex>();
         gScore.put(start, 0);
