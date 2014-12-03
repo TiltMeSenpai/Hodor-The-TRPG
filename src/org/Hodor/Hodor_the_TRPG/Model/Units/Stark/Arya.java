@@ -9,6 +9,7 @@ import org.Hodor.Hodor_the_TRPG.Model.Units.Rogue;
 public class Arya extends Rogue {
     public Arya(int x, int y){
         super(x, y, "Arya", House.Stark, 65, 16, 11, 52, 7, 1);
+        maxZ = 3;
     }
     
 }

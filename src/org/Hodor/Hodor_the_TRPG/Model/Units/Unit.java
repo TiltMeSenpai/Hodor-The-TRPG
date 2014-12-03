@@ -23,7 +23,7 @@ abstract public class Unit {
     protected int def;
     protected int evasion;
     protected int movement;
-    protected int usedMoves = 0, maxZ = 1;
+    protected int maxZ = 1;
     protected int range;
     protected int level;
     protected int xp;
@@ -102,9 +102,6 @@ abstract public class Unit {
     public void setRange(int range){this.range=range;}
     public void setLevel(int level){this.level=level;}
     public void setXp(int xp){this.xp=xp;}
-    public void setUsedMoves(int usedMoves) {
-        this.usedMoves = usedMoves;
-    }
 
     public void setWeapon(Weapon weapon){
         // If unequipping.
