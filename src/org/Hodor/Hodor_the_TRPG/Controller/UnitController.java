@@ -8,10 +8,12 @@ import org.Hodor.Hodor_the_TRPG.Model.Items.Weapon;
 import org.Hodor.Hodor_the_TRPG.Model.Units.Unit;
 import org.Hodor.Hodor_the_TRPG.Util.Vertex;
 
+import java.io.Serializable;
+
 /**
  * Created by Jason on 11/16/14.
  */
-public class UnitController {
+public class UnitController implements Serializable{
 
     public UnitController() {
 

@@ -17,13 +17,14 @@ import org.Hodor.Hodor_the_TRPG.View.GameOverActivity;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Observable;
 
 /**
  * Created by Jason on 11/16/14.
  */
-public class MapController extends Observable {
+public class MapController extends Observable implements Serializable{
     Map model;
     private ItemController itemController;
     private PlayerNode player;
@@ -108,12 +109,9 @@ public class MapController extends Observable {
         try {
             fileOutStream = Delegate.context.openFileOutput(filename, Context.MODE_PRIVATE);
             ObjectOutputStream objectOutStream = new ObjectOutputStream(fileOutStream);
-//            objectOutStream.writeObject(model);
-//            objectOutStream.writeObject(player);
-//            objectOutStream.writeObject(player.getNext());
-//            objectOutStream.writeObject(itemController);
-//            objectOutStream.writeObject(unitController);
-            objectOutStream.writeObject(this);
+            objectOutStream.writeObject(model);
+            objectOutStream.writeObject(player);
+            objectOutStream.writeObject(player.getNext());
             objectOutStream.close();
         } catch (java.io.FileNotFoundException e) {
             e.printStackTrace();
@@ -129,6 +127,12 @@ public class MapController extends Observable {
         UnitFactory.generate(house, map, player.getTeam(), player.getItems(), pos);
         setChanged();
         notifyObservers();
+    }
+
+    public void setPlayers(PlayerNode player, PlayerNode player2){
+        this.player = player;
+        this.player.setNext(player2);
+        this.player.getNext().setNext(player);
     }
 
 

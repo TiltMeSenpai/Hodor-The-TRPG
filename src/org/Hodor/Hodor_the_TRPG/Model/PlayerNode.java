@@ -4,12 +4,13 @@ import org.Hodor.Hodor_the_TRPG.Model.Items.Item;
 import org.Hodor.Hodor_the_TRPG.Model.Units.Unit;
 import org.Hodor.Hodor_the_TRPG.Util.MDP;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by jkoike on 12/5/14.
  */
-public class PlayerNode {
+public class PlayerNode implements Serializable{
     MDP ai;
     PlayerNode next;
     ArrayList<Unit> team;

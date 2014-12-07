@@ -2,10 +2,12 @@ package org.Hodor.Hodor_the_TRPG.Model.Items;
 
 import org.Hodor.Hodor_the_TRPG.Model.Units.Unit;
 
+import java.io.Serializable;
+
 /**
  * Created by Jason on 11/12/14.
  */
-public abstract class Item {
+public abstract class Item implements Serializable{
 
     protected String description;
     protected String name;

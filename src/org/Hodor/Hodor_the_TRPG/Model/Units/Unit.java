@@ -6,13 +6,14 @@ import org.Hodor.Hodor_the_TRPG.Model.House;
 import org.Hodor.Hodor_the_TRPG.Model.Items.Armor;
 import org.Hodor.Hodor_the_TRPG.Model.Items.Weapon;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
 /**
  * Created by jkoike on 11/5/14.
  */
-abstract public class Unit {
+abstract public class Unit implements Serializable{
     protected final int xpToLevel=100;
     protected int x, y;
     protected String name;

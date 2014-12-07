@@ -20,6 +20,7 @@ import org.Hodor.Hodor_the_TRPG.Model.Commands.MenuActions.Equip;
 import org.Hodor.Hodor_the_TRPG.Model.Commands.MenuActions.MenuAction;
 import org.Hodor.Hodor_the_TRPG.Model.Commands.MenuActions.Move;
 import org.Hodor.Hodor_the_TRPG.Model.Map.Map;
+import org.Hodor.Hodor_the_TRPG.Model.PlayerNode;
 import org.Hodor.Hodor_the_TRPG.Model.Units.Unit;
 import org.Hodor.Hodor_the_TRPG.Util.MapUtils;
 import org.Hodor.Hodor_the_TRPG.Util.Vertex;
@@ -187,12 +188,15 @@ public class Delegate extends Application{
         try {
             fileInStream = context.openFileInput("savedata.dat");
             ObjectInputStream objectInStream = new ObjectInputStream(fileInStream);
-//            objectOutStream.writeObject(model);
+            delegate.map = (Map)objectInStream.readObject();
+            PlayerNode player1, player2;
+            player1 = (PlayerNode)objectInStream.readObject();
+            player2 = (PlayerNode)objectInStream.readObject();
+            delegate.controller.setPlayers(player1,player2);
 //            objectOutStream.writeObject(player);
 //            objectOutStream.writeObject(player.getNext());
-//            objectOutStream.writeObject(itemController);
-//            objectOutStream.writeObject(unitController);
-            delegate.controller = (MapController)objectInStream.readObject();
+
+
             objectInStream.close();
         } catch (java.io.FileNotFoundException e) {
             e.printStackTrace();
