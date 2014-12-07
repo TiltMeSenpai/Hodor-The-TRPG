@@ -26,6 +26,9 @@ import org.Hodor.Hodor_the_TRPG.Util.Vertex;
 import org.Hodor.Hodor_the_TRPG.View.MapView;
 import org.Hodor.Hodor_the_TRPG.View.TileView;
 
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+
 /**
  * Created by jkoike on 11/18/14.
  */
@@ -176,5 +179,29 @@ public class Delegate extends Application{
 
     public static void setStart(TileView start){
         delegate.start = start;
+    }
+
+    public void load(){
+
+        FileInputStream fileInStream = null;
+        try {
+            fileInStream = context.openFileInput("savedata.dat");
+            ObjectInputStream objectInStream = new ObjectInputStream(fileInStream);
+//            objectOutStream.writeObject(model);
+//            objectOutStream.writeObject(player);
+//            objectOutStream.writeObject(player.getNext());
+//            objectOutStream.writeObject(itemController);
+//            objectOutStream.writeObject(unitController);
+            delegate.controller = (MapController)objectInStream.readObject();
+            objectInStream.close();
+        } catch (java.io.FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (java.io.IOException e){
+            e.printStackTrace();
+        }
+        catch (java.lang.ClassNotFoundException e){
+            e.printStackTrace();
+        }
     }
 }

@@ -1,5 +1,6 @@
 package org.Hodor.Hodor_the_TRPG.Controller;
 
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
@@ -13,6 +14,9 @@ import org.Hodor.Hodor_the_TRPG.Util.Heuristics.ManhattanHeuristic;
 import org.Hodor.Hodor_the_TRPG.Util.MDP;
 import org.Hodor.Hodor_the_TRPG.View.GameOverActivity;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Observable;
 
@@ -93,7 +97,33 @@ public class MapController extends Observable {
             });
         }
         Delegate.invalidate();
+
+        save();
     }
+
+    public void save(){
+        String filename = "savedata.dat";
+        //File file = new File(Delegate.context.getFilesDir(), filename);
+        FileOutputStream fileOutStream = null;
+        try {
+            fileOutStream = Delegate.context.openFileOutput(filename, Context.MODE_PRIVATE);
+            ObjectOutputStream objectOutStream = new ObjectOutputStream(fileOutStream);
+//            objectOutStream.writeObject(model);
+//            objectOutStream.writeObject(player);
+//            objectOutStream.writeObject(player.getNext());
+//            objectOutStream.writeObject(itemController);
+//            objectOutStream.writeObject(unitController);
+            objectOutStream.writeObject(this);
+            objectOutStream.close();
+        } catch (java.io.FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (java.io.IOException e){
+            e.printStackTrace();
+        }
+    }
+
+
 
     public void setTeam(House house, Map map, boolean pos){
         UnitFactory.generate(house, map, player.getTeam(), player.getItems(), pos);
