@@ -15,6 +15,5 @@ public class Move extends MenuAction {
             Toast.makeText(Delegate.context, "Move to ("+b.getTileX()+", "+
                     b.getTileY()+") Failed", Toast.LENGTH_LONG).show();
         Delegate.getController().invalidate();
-        Delegate.getMap().resetVertices();
     }
 }

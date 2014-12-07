@@ -1,6 +1,5 @@
 package org.Hodor.Hodor_the_TRPG.Controller;
 
-import org.Hodor.Hodor_the_TRPG.Delegate;
 import org.Hodor.Hodor_the_TRPG.Model.House;
 import org.Hodor.Hodor_the_TRPG.Model.Items.Item;
 import org.Hodor.Hodor_the_TRPG.Model.Items.Weapon;
@@ -17,8 +16,7 @@ import java.util.ArrayList;
  * Created by jkoike on 12/2/14.
  */
 public class UnitFactory {
-    public static void generate(House house, ArrayList<Unit> team, ArrayList<Item> teamBag, boolean side) {
-        Map map = Delegate.getMap();
+    public static void generate(House house, Map map, ArrayList<Unit> team, ArrayList<Item> teamBag, boolean side) {
         int centerX = (side)?3:map.getMap().length-5,
             centerY = map.getMap().length/2;
         switch (house) {

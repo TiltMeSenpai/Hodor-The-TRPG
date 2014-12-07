@@ -29,7 +29,7 @@ public class GameActivity extends Activity {
     public boolean onContextItemSelected(MenuItem item) {
         for(Item seleted : Delegate.getController().getItems()) {
             if (seleted.getName().equals(item.getTitle())) {
-                Toast.makeText(getApplicationContext(), "Item Equiped!", Toast.LENGTH_SHORT);
+                Toast.makeText(getApplicationContext(), "Item Equiped!", Toast.LENGTH_SHORT).show();
                 return Delegate.getController().equip(Delegate.getSelected().getUnit(), seleted);
             }
         }

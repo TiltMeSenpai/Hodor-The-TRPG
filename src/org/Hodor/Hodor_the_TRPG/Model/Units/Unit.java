@@ -32,6 +32,7 @@ abstract public class Unit {
     protected Armor armor=null;
     private Random generator;
     protected Drawable image;
+    protected boolean movedThisTurn, attackedThisTurn;
 
     public static int[][] houseColors = new int[][]{ // Listed in 0-255 ARGB form
             {255, 0, 0, 255}, // Stark
@@ -51,6 +52,7 @@ abstract public class Unit {
     public void move(int x, int y){
             this.x = x;
             this.y = y;
+            this.movedThisTurn = true;
     }
     public int getX(){
         return this.x;
@@ -102,7 +104,7 @@ abstract public class Unit {
     public void setRange(int range){this.range=range;}
     public void setLevel(int level){this.level=level;}
     public void setXp(int xp){this.xp=xp;}
-
+    public int getRange(){ return this.range; }
     public void setWeapon(Weapon weapon){
         // If unequipping.
         if (weapon==null){
@@ -164,12 +166,28 @@ abstract public class Unit {
     }
 
     public boolean canMove(){
-        return movement > 0;
+        return !movedThisTurn;
     }
 
     public boolean canAttack(){
-        return true;
+        return !attackedThisTurn;
     }
 
     abstract public boolean attack(Unit unit);
+
+    public boolean isMovedThisTurn() {
+        return movedThisTurn;
+    }
+
+    public void setMovedThisTurn(boolean movedThisTurn) {
+        this.movedThisTurn = movedThisTurn;
+    }
+
+    public boolean isAttackedThisTurn() {
+        return attackedThisTurn;
+    }
+
+    public void setAttackedThisTurn(boolean attackedThisTurn) {
+        this.attackedThisTurn = attackedThisTurn;
+    }
 }

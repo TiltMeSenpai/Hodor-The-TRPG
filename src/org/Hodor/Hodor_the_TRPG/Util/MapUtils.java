@@ -103,4 +103,12 @@ public class MapUtils {
         }
         else return 244;
     }
+
+    public static int manhattanDistance(int x1, int y1, int x2, int y2){
+        return (x1 != x2 && y1 != y2)?Math.abs(x1 - x2) + Math.abs(y1 - y2):1;
+    }
+
+    public static double euclidianDistance(int x1, int y1, int x2, int y2){
+        return Math.sqrt(Math.pow(x1 - x2, 2)+Math.pow(y1 - y2, 2));
+    }
 }

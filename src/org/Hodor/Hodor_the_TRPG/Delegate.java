@@ -3,6 +3,9 @@ package org.Hodor.Hodor_the_TRPG;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -17,6 +20,7 @@ import org.Hodor.Hodor_the_TRPG.Model.Commands.MenuActions.Equip;
 import org.Hodor.Hodor_the_TRPG.Model.Commands.MenuActions.MenuAction;
 import org.Hodor.Hodor_the_TRPG.Model.Commands.MenuActions.Move;
 import org.Hodor.Hodor_the_TRPG.Model.Map.Map;
+import org.Hodor.Hodor_the_TRPG.Model.Units.Unit;
 import org.Hodor.Hodor_the_TRPG.Util.MapUtils;
 import org.Hodor.Hodor_the_TRPG.Util.Vertex;
 import org.Hodor.Hodor_the_TRPG.View.MapView;
@@ -28,6 +32,7 @@ import org.Hodor.Hodor_the_TRPG.View.TileView;
 public class Delegate extends Application{
     static IDelegate delegate;
     public static Context context;
+    static Runnable invalidate;
     private class IDelegate{
         Map map;
         MapView mapView;
@@ -38,8 +43,13 @@ public class Delegate extends Application{
         MenuAction[] actions;
         MenuAction action;
         Vertex head;
+        Handler animHandler, messages;
         public IDelegate(){
-            map = new Map(new MapUtils(65).generate());
+            HandlerThread thread = new HandlerThread("Anim");
+            thread.start();
+            animHandler = new Handler(thread.getLooper());
+            messages = new Handler(Looper.getMainLooper());
+            map = new Map(new MapUtils(17).generate());
             controller = new MapController(map);
             actions = new MenuAction[]{
                     new Move(),
@@ -62,7 +72,10 @@ public class Delegate extends Application{
     public static DrawerLayout getContextMenu(){ return  delegate.contextMenu;}
     public static Context getAppContext() { return context; }
     public static Activity getActivity() { return (context instanceof Activity)?(Activity)context:null; }
+    public static Handler getMessages(){ return delegate.messages; }
     public static void interact(TileView view){
+        if(delegate.controller.getPlayer().getAi() != null)
+            return;
         if(delegate.start == null) {
             delegate.start = view;
             delegate.menuContents.setAdapter(view.getContextMenu());
@@ -83,56 +96,74 @@ public class Delegate extends Application{
         return tmp;
     }
 
-    public static Vertex getHead(){
-        return delegate.head;
+    public static Handler getAnim(){
+        return delegate.animHandler;
     }
 
-    public static void setup(Context context, final DrawerLayout contextMenu, ListView menuContents, MapView mapView){
+    public static Unit selectedUnit(){
+        return (delegate.start != null)?delegate.start.getUnit():null;
+    }
+
+    public static MenuAction getMove(){
+        return delegate.action;
+    }
+
+    public static void setup(final Context context, final DrawerLayout contextMenu, ListView menuContents, MapView mapView){
         delegate.contextMenu = contextMenu;
         delegate.menuContents = menuContents;
         menuContents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String action = ((TextView)view).getText().toString();
-                if (action.equals("Move")) {
-                    getMap().resetVertices();
-                    delegate.head = new Vertex(
-                            delegate.start.getTileX(),
-                            delegate.start.getTileY(),
-                            delegate.start.getUnit().getMovement()).generate(
-                                delegate.map,
-                                delegate.start.getUnit().getMaxZ()
-                    );
-                    Log.i(delegate.start.getUnit().getName(), delegate.head.toString());
-                    delegate.controller.invalidate();
-                    delegate.action = delegate.actions[0];
-                    contextMenu.closeDrawer(Gravity.END);
-
-                } else if (action.equals("Attack")) {
-                    delegate.action = delegate.actions[1];
-                    contextMenu.closeDrawer(Gravity.END);
-                }
-                else if(action.equals("Equip")) {
-                    view.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
-                        @Override
-                        public void onCreateContextMenu(ContextMenu contextMenu, View view,
-                                                        ContextMenu.ContextMenuInfo contextMenuInfo) {
-                            ((Equip)delegate.actions[2]).generateContextMenu(contextMenu);
-                        }
-                    });
-                    view.showContextMenu();
-                    contextMenu.closeDrawer(Gravity.END);
-                }
-                else{
-                    delegate.action = null;
-                    delegate.start = null;
-                    delegate.controller.nextTurn();
-                    contextMenu.closeDrawer(Gravity.END);
-                }
+                performAction(action, view);
+                delegate.contextMenu.closeDrawer(Gravity.END);
             }
         });
         Delegate.context = context;
         delegate.mapView = mapView;
+        invalidate = new Runnable() {
+            @Override
+            public void run() {
+                delegate.controller.invalidate();
+            }
+        };
+        Delegate.invalidate();
+    }
+
+    public static void performAction(String action, View view){
+        if (action.equals("Move")) {
+            delegate.head = new Vertex(
+                    delegate.start.getTileX(),
+                    delegate.start.getTileY(),
+                    delegate.start.getUnit().getMovement()).generate(
+                    delegate.map,
+                    delegate.start.getUnit().getMaxZ()
+            );
+            Log.i(delegate.start.getUnit().getName(), delegate.head.toString());
+            delegate.action = delegate.actions[0];
+
+        } else if (action.equals("Attack")) {
+            delegate.action = delegate.actions[1];
+        }
+        else if(action.equals("Equip")) {
+            view.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+                @Override
+                public void onCreateContextMenu(ContextMenu contextMenu, View view,
+                                                ContextMenu.ContextMenuInfo contextMenuInfo) {
+                    ((Equip)delegate.actions[2]).generateContextMenu(contextMenu);
+                }
+            });
+            view.showContextMenu();
+        }
+        else{
+            delegate.action = null;
+            delegate.start = null;
+            delegate.controller.nextTurn();
+        }
+    }
+
+    public static void invalidate(){
+        getMessages().post(invalidate);
     }
 
     public static boolean isMoving(){
@@ -141,5 +172,9 @@ public class Delegate extends Application{
 
     public static MapView getMapView(){
         return delegate.mapView;
+    }
+
+    public static void setStart(TileView start){
+        delegate.start = start;
     }
 }

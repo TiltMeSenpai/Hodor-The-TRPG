@@ -1,11 +1,16 @@
 package org.Hodor.Hodor_the_TRPG.Controller;
 
 import android.content.Intent;
+import android.util.Log;
+import android.widget.Toast;
 import org.Hodor.Hodor_the_TRPG.Delegate;
 import org.Hodor.Hodor_the_TRPG.Model.House;
 import org.Hodor.Hodor_the_TRPG.Model.Items.Item;
 import org.Hodor.Hodor_the_TRPG.Model.Map.Map;
+import org.Hodor.Hodor_the_TRPG.Model.PlayerNode;
 import org.Hodor.Hodor_the_TRPG.Model.Units.Unit;
+import org.Hodor.Hodor_the_TRPG.Util.Heuristics.ManhattanHeuristic;
+import org.Hodor.Hodor_the_TRPG.Util.MDP;
 import org.Hodor.Hodor_the_TRPG.View.GameOverActivity;
 
 import java.util.ArrayList;
@@ -17,11 +22,7 @@ import java.util.Observable;
 public class MapController extends Observable {
     Map model;
     private ItemController itemController;
-    boolean turn = true; // True == Player 1, False == Player 2
-    private ArrayList<Unit> team1;
-    private ArrayList<Unit> team2;
-    private ArrayList<Item> team1Bag;
-    private ArrayList<Item> team2Bag;
+    private PlayerNode player;
     private UnitController unitController;
 
 
@@ -30,22 +31,20 @@ public class MapController extends Observable {
         itemController = new ItemController();
         model = map;
         unitController = new UnitController();
-        team1Bag = new ArrayList<Item>();
-        team2Bag = new ArrayList<Item>();
-        team1 = new ArrayList<Unit>();
-        team2 = new ArrayList<Unit>();
-
-        setTeam1(House.Stark, map);
-        setTeam2(House.Targaryen, map);
-        turn = true;
+        player = new PlayerNode(new MDP(new ManhattanHeuristic()), new ArrayList<Unit>(), new ArrayList<Item>(),
+                new PlayerNode(new MDP(new ManhattanHeuristic()), new ArrayList<Unit>(), new ArrayList<Item>(), null));
+        player.getNext().setNext(player);
+        setTeam(House.Lannister, map, true);
+        player = player.getNext();
+        setTeam(House.Stark, map, false);
     }
 
     public Unit getUnit(int x, int y){
-        for(Unit unit : (team1)){
+        for(Unit unit : getUnits()){
             if(unit.getX() == x && unit.getY() == y)
                 return unit;
         }
-        for(Unit unit : (team2)){
+        for(Unit unit : getEUnits()){
             if(unit.getX() == x && unit.getY() == y)
                 return unit;
         }
@@ -53,104 +52,106 @@ public class MapController extends Observable {
     }
 
     public ArrayList<Unit> getUnits(){
-        return ((turn)?team1:team2);
+        return player.getTeam();
     }
 
     public ArrayList<Unit> getEUnits(){
-        return ((!turn)?team1:team2);
+        PlayerNode curr = player;
+        ArrayList<Unit> eTeam = new ArrayList<Unit>();
+        do{
+            player = player.getNext();
+            eTeam.addAll(player.getTeam());
+        }while (player != curr);
+        return eTeam;
     }
 
-//    public MapController addUnit(Unit unit){
-//        ((turn)?model.getP1units():model.getP2units()).add(unit);
-//        return this;
-//    }
+    public MapController addUnit(Unit unit){
+        player.getTeam().add(unit);
+        return this;
+    }
 
-    public void nextTurn(){
+    public PlayerNode getPlayer() {
+        return player;
+    }
+
+    public synchronized void nextTurn(){
         setChanged();
-        turn ^= true;
+        player = player.getNext();
+        for(Unit unit : getUnits()){
+            unit.setMovedThisTurn(false);
+            unit.setAttackedThisTurn(false);
+        }
+        System.gc();
         if(getUnits().size() == 0 || getEUnits().size() == 0)
             throw new RuntimeException("Game Over! Player "+((getUnits().size() == 0)?1:2)+" Loses!");
-        notifyObservers();
+        if(player.getAi() != null){
+            Delegate.getAnim().post(new Runnable() {
+                @Override
+                public void run() {
+                    player.getAi().execute();
+                }
+            });
+        }
+        Delegate.invalidate();
     }
 
-    public boolean getTurn(){
-        return turn;
-    }
-
-    public void setTeam1(House house, Map map){
-        turn = true;
-        UnitFactory.generate(house, team1, team1Bag, true);
+    public void setTeam(House house, Map map, boolean pos){
+        UnitFactory.generate(house, map, player.getTeam(), player.getItems(), pos);
         setChanged();
         notifyObservers();
     }
 
-    public void setTeam2(House house, Map map){
-        turn = false;
-        UnitFactory.generate(house, team2, team2Bag, false);
-        setChanged();
-        notifyObservers();
-    }
 
-    public boolean attack(Unit unit, Unit enemy) {
+    public synchronized boolean attack(Unit unit, Unit enemy) {
         setChanged();
         boolean flag = false;
 
-        if (team1.contains(unit) && team2.contains(enemy) || team2.contains(unit) && team1.contains(enemy)) {
+        if (getUnits().contains(unit) && getEUnits().contains(enemy)) {
             if (unitController.attack(unit, enemy)) {
                 if (unitController.isDead(unit)) {
-                    if (team1.contains(unit)) {
-                        team1.remove(unit);
-                    } else {
-                        team2.remove(unit);
-                    }
+                    getUnits().remove(unit);
                 }
-
-                if (unitController.isDead(enemy)) {
-                    if (team1.contains(enemy)) {
-                        team1.remove(enemy);
-                    } else {
-                        team2.remove(enemy);
-                    }
-
+                else if (unitController.isDead(enemy)) {
+                    if(getEUnits().contains(enemy))
+                        getEUnits().remove(enemy);
                 }
                 flag = true;
             }
         }
-        if(team1.size() == 0 || team2.size() == 0) {
-            try{
+        if(getUnits().size() == 0 || getEUnits().size() == 0) {
                 Delegate.getMap();
                 Intent intent = new Intent(Delegate.getAppContext(), GameOverActivity.class);
-                intent.putExtra("GameOverMessage", "Game Over! Player " + ((team1.size() == 0) ? 1 : 2) + " Loses!");
+                intent.putExtra("GameOverMessage", "Game Over! Player " + ((getUnits().size() == 0) ? 1 : 2) + " Loses!");
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 Delegate.getAppContext().startActivity(intent);
-            }
-            catch (NullPointerException e) {
-                throw new RuntimeException("Game Over! Player " + ((team1.size() == 0) ? 1 : 2) + " Loses!");
-            }
         }
-        notifyObservers();
+        Delegate.invalidate();
+        if(flag) {
+            unit.setAttackedThisTurn(true);
+            if(Delegate.context != null)
+                Toast.makeText(Delegate.context, unit.getName() + " Has " + unit.getCurrentHp() + " HP\n" +
+                        enemy.getName() + " Has " + enemy.getCurrentHp() + " HP", Toast.LENGTH_LONG).show();
+        }
         return flag;
     }
 
 
-    public boolean move(Unit unit, int x, int y){
+    public synchronized boolean move(Unit unit, int x, int y){
         setChanged();
-        if(!((turn)?team1:team2).contains(unit))
+        if(!getUnits().contains(unit))
             return false;
         boolean flag = unitController.move(unit, x, y);
-        notifyObservers();
+        if(!flag)
+            Log.i("Units", "Could not move");
+        Delegate.invalidate();
         return flag;
     }
 
     public ArrayList<Item> getItems(){
-        if (turn){
-            return team1Bag;
-        }
-        else{
-            return team2Bag;
-        }
+        return player.getItems();
     }
 
-    public boolean equip(Unit unit, Item item){
+    public synchronized boolean equip(Unit unit, Item item){
         return unitController.equip(unit, item);
     }
 

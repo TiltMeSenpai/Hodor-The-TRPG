@@ -13,10 +13,12 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import org.Hodor.Hodor_the_TRPG.Delegate;
+import org.Hodor.Hodor_the_TRPG.Model.Commands.MenuActions.Attack;
 import org.Hodor.Hodor_the_TRPG.Model.Map.Tile;
 import org.Hodor.Hodor_the_TRPG.Model.Units.Unit;
 import org.Hodor.Hodor_the_TRPG.R;
 import org.Hodor.Hodor_the_TRPG.Util.MapUtils;
+import org.Hodor.Hodor_the_TRPG.Util.Vertex;
 
 import java.util.ArrayList;
 import java.util.Observable;
@@ -27,6 +29,7 @@ import java.util.Observer;
  */
 public class TileView extends View implements Observer {
     static Paint selectedPaint = new Paint();
+    static Paint attackPaint = new Paint();
     static TextPaint textPaint = new TextPaint();
     ColorMatrix tm, cm;
     public Tile getTile() {
@@ -86,6 +89,7 @@ public class TileView extends View implements Observer {
         unitPaint = new Paint();
         Delegate.getController().addObserver(this);
         selectedPaint.setARGB(100, 255, 255, 0);
+        attackPaint.setARGB(100, 255, 0, 0);
     }
 
     public TileView(Context context) {
@@ -105,8 +109,13 @@ public class TileView extends View implements Observer {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if(Delegate.getMap().getVertices().containsKey(x+", "+y))
-            canvas.drawRect(0, 0, getWidth(), getHeight(), selectedPaint);
+        if(Vertex.isValidMove(x + ", " + y))
+                canvas.drawRect(0, 0, getWidth(), getHeight(), selectedPaint);
+        if(Delegate.getMove() instanceof Attack) {
+            if(Delegate.selectedUnit().getRange() >= MapUtils.euclidianDistance(x, y,
+                        Delegate.selectedUnit().getX(), Delegate.selectedUnit().getY()))
+                canvas.drawRect(0, 0, getWidth(), getHeight(), attackPaint);
+        }
         if(unit != null){
             canvas.drawCircle(getWidth()/2.0F, getHeight()/2.0F, getHeight()/2, unitPaint);
         }

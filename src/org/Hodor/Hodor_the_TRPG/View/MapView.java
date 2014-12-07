@@ -232,4 +232,8 @@ public class MapView extends ViewGroup {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
     }
+
+    public TileView[][] getWorld() {
+        return world;
+    }
 }

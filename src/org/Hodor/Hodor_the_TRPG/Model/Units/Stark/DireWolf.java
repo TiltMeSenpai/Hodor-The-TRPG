@@ -8,6 +8,6 @@ import org.Hodor.Hodor_the_TRPG.Model.Units.Special;
  */
 public class DireWolf extends Special {
     public DireWolf(int x, int y){
-        super(x, y, "Hodor", House.Stark, 110, 20, 18, 15, 10, 1);
+        super(x, y, "Dire Wolf", House.Stark, 110, 20, 18, 15, 10, 1);
     }
 }

@@ -4,10 +4,15 @@ import org.Hodor.Hodor_the_TRPG.Delegate;
 import org.Hodor.Hodor_the_TRPG.Model.Map.Map;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Vertex implements Comparable<Vertex>{
     int x, y, points;
     ArrayList<Vertex> edges;
+    public static java.util.Map<String, Vertex> vertices = new ConcurrentHashMap<String, Vertex>();
+    public static java.util.Map<Vertex, Vertex> cameFrom = new HashMap<Vertex, Vertex>();
 
     public Vertex(int x, int y){
         this.x = x;
@@ -19,11 +24,11 @@ public class Vertex implements Comparable<Vertex>{
         this.x = x;
         this.y = y;
         this.points = points;
-        Delegate.getMap().getVertices().put(x+", "+y, this);
+        vertices.put(x + ", " + y, this);
         edges = new ArrayList<Vertex>();
     }
 
-    public Vertex generate(Map map, int maxV){ // Recursive depth-first search to find all possible moves
+    public synchronized Vertex generate(Map map, int maxV){ // Recursive depth-first search to find all possible moves
         this.edges = new ArrayList<Vertex>();
         if(points < 1)
             return this;
@@ -35,20 +40,59 @@ public class Vertex implements Comparable<Vertex>{
         };
         int h = map.get(x,y).getHeight();
         for (int[] dir : dirs){
-            if(dir[0] >= 0 && dir[1] >= 0){
-                String coords = dir[0]+","+dir[1];
+            if(dir[0] >= 0 && dir[1] >= 0 && dir[0] < Delegate.getMap().getMap().length
+                    && dir[1] < Delegate.getMap().getMap().length){
+                String coords = dir[0]+", "+dir[1];
                 int dH = Math.abs(map.get(dir[0], dir[1]).getHeight()-h);
-                if(points - dH - 1 >= 0 && dH <= maxV) {
-                    if (!map.getVertices().containsKey(coords))
-                        edges.add(new Vertex(dir[0], dir[1], points - dH - 1).generate(map, maxV));
-                    else if (map.getVertices().get(coords).points < points - dH - 1) {
-                        map.getVertices().get(coords).points = points - dH - 1;
-                        edges.add(map.getVertices().get(coords));
+                if(points - dH - 1 >= 0 && dH <= maxV && Delegate.getController().getUnit(dir[0], dir[1]) == null) {
+                    if (!vertices.containsKey(coords)) {
+                        Vertex newV = new Vertex(dir[0], dir[1], points - dH - 1);
+                        edges.add(newV.generate(map, maxV));
+                        cameFrom.put(newV, this);
+                    }
+                    else if (vertices.get(coords).points < points - dH - 1) {
+                        vertices.get(coords).points = points - dH - 1;
+                        edges.add(vertices.get(coords));
+                        cameFrom.put(vertices.get(coords), this);
                     }
                 }
             }
         }
         return this;
+    }
+
+    public synchronized void destroy() {
+        if(vertices.size() != 0)
+            vertices.clear();
+        for(Vertex child : edges)
+            child.destroy();
+        points = 0;
+        edges.clear();
+    }
+
+    public static boolean isValidMove(String move){
+        return cameFrom != null && vertices != null &&
+                vertices.containsKey(move) &&
+                cameFrom.containsKey(vertices.get(move));
+    }
+
+    public static ArrayList<Vertex> reconstructPath(Vertex goal){
+        ArrayList<Vertex> totalPath = new ArrayList<Vertex>();
+        totalPath.add(goal);
+        while(cameFrom.containsKey(goal)){
+            goal = cameFrom.get(goal);
+            totalPath.add(goal);
+        }
+        Collections.reverse(totalPath);
+        return totalPath;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 
     @Override

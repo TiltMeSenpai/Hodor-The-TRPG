@@ -5,38 +5,48 @@ import org.Hodor.Hodor_the_TRPG.Delegate;
 import org.Hodor.Hodor_the_TRPG.Model.Items.Armor;
 import org.Hodor.Hodor_the_TRPG.Model.Items.Item;
 import org.Hodor.Hodor_the_TRPG.Model.Items.Weapon;
-import org.Hodor.Hodor_the_TRPG.Model.Map.Map;
 import org.Hodor.Hodor_the_TRPG.Model.Units.Unit;
-import org.Hodor.Hodor_the_TRPG.Util.Pathfinder;
-
-import java.util.ArrayList;
+import org.Hodor.Hodor_the_TRPG.Util.Vertex;
 
 /**
  * Created by Jason on 11/16/14.
  */
 public class UnitController {
 
-    private ArrayList<Unit> units;
-    private Map map;
-
     public UnitController() {
 
     }
 
-    public boolean move(Unit unit, int endX, int endY) {
-        if(!Delegate.getMap().getVertices().containsKey(endX+", "+endY)){
-            return false;
+    public synchronized boolean move(final Unit unit, int endX, int endY) {
+        if(!unit.isMovedThisTurn()) {
+            final Vertex target = Vertex.vertices.get(endX + ", " + endY);
+            Log.i("Moving", endX + ", " + endY);
+            Delegate.getAnim().post(new Runnable() {
+                @Override
+                public void run() {
+                    for (Vertex point : Vertex.reconstructPath(target)) {
+                        if(point != null) {
+                            unit.move(point.getX(), point.getY());
+                            Delegate.invalidate();
+                            Log.i("Moving " + unit.getName(), point.getX() + ", " + point.getY());
+                            try {
+                                Thread.sleep(250);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    }
+                }
+            });
+            return true;
         }
-        Log.i("Moving "+unit.getName(), new Pathfinder(endX, endY, Delegate.getHead()
-        ).run().toString());
-        unit.move(endX, endY);
-        return true;
+        Log.i(unit.getName(), "Already moved");
+        return false;
     }
 
     public boolean attack(Unit unit, Unit enemy){
-
-        return unit.attack(enemy);
-
+        return unit.canAttack() && unit.attack(enemy);
     }
 
     public boolean equip(Unit unit, Item item){
