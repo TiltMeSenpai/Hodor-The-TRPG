@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView"
+            android:background="@drawable/westeros" android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Choose your House"
+            android:id="@+id/textView" android:layout_alignParentTop="true" android:layout_centerHorizontal="true"
+            android:layout_marginTop="200dp"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="House Stark"
+            android:id="@+id/starkButton" android:layout_centerVertical="true" android:layout_toStartOf="@+id/textView"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="House Lannister"
+            android:id="@+id/lannisterButton" android:layout_centerVertical="true" android:layout_toEndOf="@+id/textView"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="House Targaryen"
+            android:id="@+id/targaryenButton" android:layout_below="@+id/starkButton" android:layout_toStartOf="@+id/textView"
+            android:layout_marginTop="87dp"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="The Wildlings"
+            android:id="@+id/wildlingButton" android:layout_alignTop="@+id/targaryenButton"
+            android:layout_alignStart="@+id/lannisterButton"/>
+</RelativeLayout>
