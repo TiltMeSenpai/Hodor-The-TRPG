@@ -5,8 +5,8 @@
     <item android:drawable="@drawable/starks_archer__al2" android:minLevel="2"/>
     <item android:drawable="@drawable/starks_archer__al3" android:minLevel="3"/>
     <item android:drawable="@drawable/starks_archer__ar1" android:minLevel="4"/>
-    <item android:drawable="@drawable/starks_archer__al2" android:minLevel="5"/>
-    <item android:drawable="@drawable/starks_archer__al3" android:minLevel="6"/>
+    <item android:drawable="@drawable/starks_archer__ar2" android:minLevel="5"/>
+    <item android:drawable="@drawable/starks_archer__ar3" android:minLevel="6"/>
     <item android:drawable="@drawable/starks_archer__wb1" android:minLevel="7"/>
     <item android:drawable="@drawable/starks_archer__wb2" android:minLevel="8"/>
     <item android:drawable="@drawable/starks_archer__wb3" android:minLevel="9"/>
