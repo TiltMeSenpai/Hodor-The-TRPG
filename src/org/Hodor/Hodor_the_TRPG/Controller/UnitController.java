@@ -30,7 +30,6 @@ public class UnitController implements Serializable{
                         if(point != null) {
                             unit.move(point.getX(), point.getY());
                             Delegate.invalidate();
-                            Log.i("Moving " + unit.getName(), point.getX() + ", " + point.getY());
                             try {
                                 Thread.sleep(250);
                             } catch (InterruptedException e) {
@@ -39,6 +38,8 @@ public class UnitController implements Serializable{
 
                         }
                     }
+                    Vertex.cameFrom.clear();
+                    Delegate.invalidate();
                 }
             });
             return true;

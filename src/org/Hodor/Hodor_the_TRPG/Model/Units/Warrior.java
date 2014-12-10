@@ -18,6 +18,7 @@ public class Warrior extends Unit{
         this.range = range;
         this.level = 1;
         this.xp = 0;
+
     }
 
     @Override

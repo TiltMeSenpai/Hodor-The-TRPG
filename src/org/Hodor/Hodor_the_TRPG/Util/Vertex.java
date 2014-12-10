@@ -29,7 +29,7 @@ public class Vertex implements Comparable<Vertex>{
     }
 
     public synchronized Vertex generate(Map map, int maxV){ // Recursive depth-first search to find all possible moves
-        this.edges = new ArrayList<Vertex>();
+        this.edges.clear();
         if(points < 1)
             return this;
         int[][] dirs = new int[][]{

@@ -47,10 +47,13 @@ public class Delegate extends Application{
         MenuAction[] actions;
         MenuAction action;
         Vertex head;
-        Handler animHandler, messages;
+        Handler animHandler, messages, aiHandler;
         public IDelegate(){
             HandlerThread thread = new HandlerThread("Anim");
             thread.start();
+            HandlerThread ai = new HandlerThread("MDP thread");
+            ai.start();
+            aiHandler = new Handler(ai.getLooper());
             animHandler = new Handler(thread.getLooper());
             messages = new Handler(Looper.getMainLooper());
             map = new Map(new MapUtils(17).generate());
@@ -66,6 +69,8 @@ public class Delegate extends Application{
         if(delegate == null)
             delegate = new IDelegate();
     }
+
+    public static Handler getAi(){ return delegate.aiHandler; }
 
     public static Map getMap(){
         return delegate.map;
@@ -89,6 +94,7 @@ public class Delegate extends Application{
             delegate.action.execute(delegate.controller, delegate.start, view);
             delegate.start = null;
             delegate.action = null;
+            invalidate();
         }
         else
             delegate.start = null;
@@ -164,6 +170,7 @@ public class Delegate extends Application{
             delegate.start = null;
             delegate.controller.nextTurn();
         }
+        Delegate.invalidate();
     }
 
     public static void invalidate(){

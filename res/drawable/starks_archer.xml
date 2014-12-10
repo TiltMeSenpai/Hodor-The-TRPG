@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<level-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/starks_archer__al1" android:minLevel="1"/>
+    <item android:drawable="@drawable/starks_archer__al2" android:minLevel="2"/>
+    <item android:drawable="@drawable/starks_archer__al3" android:minLevel="3"/>
+    <item android:drawable="@drawable/starks_archer__ar1" android:minLevel="4"/>
+    <item android:drawable="@drawable/starks_archer__al2" android:minLevel="5"/>
+    <item android:drawable="@drawable/starks_archer__al3" android:minLevel="6"/>
+    <item android:drawable="@drawable/starks_archer__wb1" android:minLevel="7"/>
+    <item android:drawable="@drawable/starks_archer__wb2" android:minLevel="8"/>
+    <item android:drawable="@drawable/starks_archer__wb3" android:minLevel="9"/>
+    <item android:drawable="@drawable/starks_archer__wf1" android:minLevel="10"/>
+    <item android:drawable="@drawable/starks_archer__wf2" android:minLevel="11"/>
+    <item android:drawable="@drawable/starks_archer__wf3" android:minLevel="12"/>
+    <item android:drawable="@drawable/starks_archer__wl1" android:minLevel="13"/>
+    <item android:drawable="@drawable/starks_archer__wl2" android:minLevel="14"/>
+    <item android:drawable="@drawable/starks_archer__wl3" android:minLevel="15"/>
+    <item android:drawable="@drawable/starks_archer__wr1" android:minLevel="16"/>
+    <item android:drawable="@drawable/starks_archer__wr2" android:minLevel="17"/>
+    <item android:drawable="@drawable/starks_archer__wr3" android:minLevel="18"/>
+</level-list>

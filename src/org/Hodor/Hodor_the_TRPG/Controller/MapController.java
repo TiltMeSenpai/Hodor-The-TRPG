@@ -14,7 +14,6 @@ import org.Hodor.Hodor_the_TRPG.Util.Heuristics.ManhattanHeuristic;
 import org.Hodor.Hodor_the_TRPG.Util.MDP;
 import org.Hodor.Hodor_the_TRPG.View.GameOverActivity;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -37,9 +36,9 @@ public class MapController extends Observable implements Serializable{
         model = map;
         unitController = new UnitController();
         player = new PlayerNode(new MDP(new ManhattanHeuristic()), new ArrayList<Unit>(), new ArrayList<Item>(),
-                new PlayerNode(new MDP(new ManhattanHeuristic()), new ArrayList<Unit>(), new ArrayList<Item>(), null));
+                new PlayerNode(null, new ArrayList<Unit>(), new ArrayList<Item>(), null));
         player.getNext().setNext(player);
-        setTeam(House.Lannister, map, true);
+        setTeam(House.Targaryen, map, true);
         player = player.getNext();
         setTeam(House.Stark, map, false);
     }
@@ -63,10 +62,11 @@ public class MapController extends Observable implements Serializable{
     public ArrayList<Unit> getEUnits(){
         PlayerNode curr = player;
         ArrayList<Unit> eTeam = new ArrayList<Unit>();
-        do{
-            player = player.getNext();
+        player = player.getNext();
+        while(curr != player){
             eTeam.addAll(player.getTeam());
-        }while (player != curr);
+            player = player.getNext();
+        }
         return eTeam;
     }
 
@@ -87,10 +87,8 @@ public class MapController extends Observable implements Serializable{
             unit.setAttackedThisTurn(false);
         }
         System.gc();
-        if(getUnits().size() == 0 || getEUnits().size() == 0)
-            throw new RuntimeException("Game Over! Player "+((getUnits().size() == 0)?1:2)+" Loses!");
-        if(player.getAi() != null){
-            Delegate.getAnim().post(new Runnable() {
+        if(player.getAi() != null && getUnits().size() > 0){
+            Delegate.getAi().post(new Runnable() {
                 @Override
                 public void run() {
                     player.getAi().execute();
@@ -107,12 +105,14 @@ public class MapController extends Observable implements Serializable{
         //File file = new File(Delegate.context.getFilesDir(), filename);
         FileOutputStream fileOutStream = null;
         try {
+            if(Delegate.context != null) {
             fileOutStream = Delegate.context.openFileOutput(filename, Context.MODE_PRIVATE);
             ObjectOutputStream objectOutStream = new ObjectOutputStream(fileOutStream);
             objectOutStream.writeObject(model);
             objectOutStream.writeObject(player);
             objectOutStream.writeObject(player.getNext());
             objectOutStream.close();
+            }
         } catch (java.io.FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -145,9 +145,11 @@ public class MapController extends Observable implements Serializable{
                 if (unitController.isDead(unit)) {
                     getUnits().remove(unit);
                 }
-                else if (unitController.isDead(enemy)) {
-                    if(getEUnits().contains(enemy))
-                        getEUnits().remove(enemy);
+                if (unitController.isDead(enemy)) {
+                    PlayerNode tmp = player;
+                    while(!tmp.getTeam().contains(enemy))
+                        tmp = tmp.getNext();
+                    tmp.getTeam().remove(enemy);
                 }
                 flag = true;
             }
@@ -155,16 +157,20 @@ public class MapController extends Observable implements Serializable{
         if(getUnits().size() == 0 || getEUnits().size() == 0) {
                 Delegate.getMap();
                 Intent intent = new Intent(Delegate.getAppContext(), GameOverActivity.class);
-                intent.putExtra("GameOverMessage", "Game Over! Player " + ((getUnits().size() == 0) ? 1 : 2) + " Loses!");
+                intent.putExtra("GameOverMessage", "House " + unit.getHouse() + " Rules Weseros!");
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 Delegate.getAppContext().startActivity(intent);
         }
         Delegate.invalidate();
         if(flag) {
             unit.setAttackedThisTurn(true);
-            if(Delegate.context != null)
+            if(Delegate.context != null) {
                 Toast.makeText(Delegate.context, unit.getName() + " Has " + unit.getCurrentHp() + " HP\n" +
                         enemy.getName() + " Has " + enemy.getCurrentHp() + " HP", Toast.LENGTH_LONG).show();
+                Log.i("Attacks", unit.getName() + " Has " + unit.getCurrentHp() + " HP\n" +
+                        enemy.getName() + " Has " + enemy.getCurrentHp() + " HP");
+            }
+
         }
         return flag;
     }

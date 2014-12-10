@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<level-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/starks_wolf__al1" android:maxLevel="1"/>
+    <item android:drawable="@drawable/starks_wolf__al2" android:maxLevel="2"/>
+    <item android:drawable="@drawable/starks_wolf__al3" android:maxLevel="3"/>
+    <item android:drawable="@drawable/starks_wolf__ar1" android:maxLevel="4"/>
+    <item android:drawable="@drawable/starks_wolf__ar2" android:maxLevel="5"/>
+    <item android:drawable="@drawable/starks_wolf__ar3" android:maxLevel="6"/>
+    <item android:drawable="@drawable/starks_wolf__wb1" android:maxLevel="7"/>
+    <item android:drawable="@drawable/starks_wolf__wb2" android:maxLevel="8"/>
+    <item android:drawable="@drawable/starks_wolf__wb3" android:maxLevel="9"/>
+    <item android:drawable="@drawable/starks_wolf__wf1" android:maxLevel="10"/>
+    <item android:drawable="@drawable/starks_wolf__wf2" android:maxLevel="11"/>
+    <item android:drawable="@drawable/starks_wolf__wf3" android:maxLevel="12"/>
+    <item android:drawable="@drawable/starks_wolf__wl1" android:maxLevel="13"/>
+    <item android:drawable="@drawable/starks_wolf__wl2" android:maxLevel="14"/>
+    <item android:drawable="@drawable/starks_wolf__wl3" android:maxLevel="15"/>
+    <item android:drawable="@drawable/starks_wolf__wr1" android:maxLevel="16"/>
+    <item android:drawable="@drawable/starks_wolf__wr2" android:maxLevel="17"/>
+    <item android:drawable="@drawable/starks_wolf__wr3" android:maxLevel="18"/>
+</level-list>
