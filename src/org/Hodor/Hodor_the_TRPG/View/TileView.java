@@ -117,6 +117,7 @@ public class TileView extends View implements Observer {
                 canvas.drawRect(0, 0, getWidth(), getHeight(), attackPaint);
         }
         if(unit != null){
+
             canvas.drawCircle(getWidth()/2.0F, getHeight()/2.0F, getHeight()/2, unitPaint);
         }
 
