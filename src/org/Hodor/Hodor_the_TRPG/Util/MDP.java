@@ -4,6 +4,7 @@ import android.util.Log;
 import org.Hodor.Hodor_the_TRPG.Delegate;
 import org.Hodor.Hodor_the_TRPG.Model.Units.Unit;
 
+import java.io.Serializable;
 import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.Map;
@@ -13,7 +14,7 @@ import java.util.TreeMap;
 /**
  * Created by jkoike on 12/2/14.
  */
-public class MDP {
+public class MDP implements Serializable{
     Heuristic heuristic;
     Random random = new SecureRandom();
     public MDP(Heuristic heuristic){
@@ -54,7 +55,8 @@ public class MDP {
                 }
             }
             for(Unit e : Delegate.getController().getEUnits()){
-                if(unit.getRange() >= MapUtils.euclidianDistance(unit.getX(), unit.getY(), e.getX(), e.getY())){
+                if(unit.getRange() >= MapUtils.euclidianDistance(unit.getX(), unit.getY(), e.getX(), e.getY())
+                        && heuristic.evaluateAttack(unit, e) >= 0){
                     Delegate.getController().attack(unit, e);
                 }
             }

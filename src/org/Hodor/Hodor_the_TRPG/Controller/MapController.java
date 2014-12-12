@@ -35,8 +35,8 @@ public class MapController extends Observable implements Serializable{
         itemController = new ItemController();
         model = map;
         unitController = new UnitController();
-        player = new PlayerNode(new MDP(new ManhattanHeuristic()), new ArrayList<Unit>(), new ArrayList<Item>(),
-                new PlayerNode(null, new ArrayList<Unit>(), new ArrayList<Item>(), null));
+        player = new PlayerNode(null, new ArrayList<Unit>(), new ArrayList<Item>(),
+                new PlayerNode(new MDP(new ManhattanHeuristic()), new ArrayList<Unit>(), new ArrayList<Item>(), null));
         player.getNext().setNext(player);
         setTeam(House.Targaryen, map, true);
         player = player.getNext();
