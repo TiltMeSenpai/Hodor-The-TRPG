@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<level-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@drawable/item_spark_1" android:minLevel="1"/>
+    <item android:drawable="@drawable/item_spark_2" android:minLevel="2"/>
+    <item android:drawable="@drawable/item_spark_3" android:minLevel="3"/>
+
+</level-list>
