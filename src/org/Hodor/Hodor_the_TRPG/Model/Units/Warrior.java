@@ -29,10 +29,13 @@ public class Warrior extends Unit{
             if((Math.abs(unit.getX() - x) + Math.abs(unit.getY() - y)) <= unit.range){
                 currentHp = currentHp - unit.str;
             }
+
             return true;
 
         } else {
             return false;
         }
+
+
     }
 }
