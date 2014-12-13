@@ -14,6 +14,7 @@ import org.Hodor.Hodor_the_TRPG.Model.PlayerNode;
 import org.Hodor.Hodor_the_TRPG.Model.Units.Unit;
 import org.Hodor.Hodor_the_TRPG.Util.Heuristics.ManhattanHeuristic;
 import org.Hodor.Hodor_the_TRPG.Util.MDP;
+import org.Hodor.Hodor_the_TRPG.Util.SurvivalAgent;
 import org.Hodor.Hodor_the_TRPG.View.MapView;
 
 import java.util.ArrayList;
@@ -46,10 +47,16 @@ public class GameActivity extends Activity {
                             new ArrayList<Item>(), null)));
             Delegate.getController().getPlayer().getNext().setNext(Delegate.getController().getPlayer());
         }
+        if(intent.getStringExtra("Players").equals("suv")){
+            Delegate.getController().setPlayer(new PlayerNode(null, new ArrayList<Unit>(), new ArrayList<Item>(),
+                    new PlayerNode(new SurvivalAgent(new ManhattanHeuristic()), new ArrayList<Unit>(),
+                            new ArrayList<Item>(), null)));
+            Delegate.getController().getPlayer().getNext().setNext(Delegate.getController().getPlayer());
+        }
         Delegate.getController().setTeam(p1, Delegate.getMap(), true);
-        Delegate.getController().nextTurn();
+        Delegate.getController().quietAdvance();
         Delegate.getController().setTeam(p2, Delegate.getMap(), false);
-        Delegate.getController().nextTurn();
+        Delegate.getController().quietAdvance();
         Log.i("Player 1, "+p1.toString(), Delegate.getController().getUnits().toString());
         Log.i("Player 2, "+p2.toString(), Delegate.getController().getEUnits().toString());
         Delegate.invalidate();
