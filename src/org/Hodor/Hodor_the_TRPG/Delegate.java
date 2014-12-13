@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -58,7 +59,7 @@ public class Delegate extends Application{
             aiHandler = new Handler(ai.getLooper());
             animHandler = new Handler(thread.getLooper());
             messages = new Handler(Looper.getMainLooper());
-            map = new Map(new MapUtils(17).generate());
+            map = new Map(new MapUtils(33).generate());
             controller = new MapController(map);
             actions = new MenuAction[]{
                     new Move(),
@@ -133,7 +134,7 @@ public class Delegate extends Application{
         });
         Delegate.context = context;
         delegate.mapView = mapView;
-        delegate.unitInfo = new UnitView(mapView.findViewById(R.id.unitView));
+        delegate.unitInfo = new UnitView(LayoutInflater.from(mapView.getContext()).inflate(R.layout.unit_info_layout, null));
         invalidate = new Runnable() {
             @Override
             public void run() {
@@ -157,18 +158,16 @@ public class Delegate extends Application{
 
         } else if (action.equals("Attack")) {
             delegate.action = delegate.actions[1];
-        } else if (action.equals("Info")){
-            delegate.unitInfo.setUnit(delegate.start.getUnit());
         }
         else if(action.equals("Equip")) {
-            view.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+            delegate.start.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
                 @Override
                 public void onCreateContextMenu(ContextMenu contextMenu, View view,
                                                 ContextMenu.ContextMenuInfo contextMenuInfo) {
                     ((Equip)delegate.actions[2]).generateContextMenu(contextMenu);
                 }
             });
-            view.showContextMenu();
+            delegate.start.showContextMenu();
         }
         else if(action.equals("End Turn")){
             delegate.action = null;
@@ -195,7 +194,6 @@ public class Delegate extends Application{
     }
 
     public void load(){
-
         FileInputStream fileInStream = null;
         try {
             fileInStream = context.openFileInput("savedata.dat");
@@ -205,8 +203,6 @@ public class Delegate extends Application{
             player1 = (PlayerNode)objectInStream.readObject();
             player2 = (PlayerNode)objectInStream.readObject();
             delegate.controller.setPlayers(player1,player2);
-
-
             objectInStream.close();
         } catch (java.io.FileNotFoundException e) {
             e.printStackTrace();

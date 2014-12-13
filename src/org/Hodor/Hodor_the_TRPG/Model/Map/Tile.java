@@ -21,4 +21,6 @@ abstract public class Tile implements Serializable{
     protected float penalty;
 
     public Unit getUnit() { return unit; }
+
+    public void setHeight(int height) { this.height = height; }
 }

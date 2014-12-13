@@ -6,12 +6,14 @@ import android.util.Log;
 import android.widget.Toast;
 import org.Hodor.Hodor_the_TRPG.Delegate;
 import org.Hodor.Hodor_the_TRPG.Model.House;
+import org.Hodor.Hodor_the_TRPG.Model.Items.Consumable;
 import org.Hodor.Hodor_the_TRPG.Model.Items.Item;
 import org.Hodor.Hodor_the_TRPG.Model.Map.Map;
 import org.Hodor.Hodor_the_TRPG.Model.PlayerNode;
 import org.Hodor.Hodor_the_TRPG.Model.Units.Unit;
 import org.Hodor.Hodor_the_TRPG.Util.Heuristics.ManhattanHeuristic;
 import org.Hodor.Hodor_the_TRPG.Util.MDP;
+import org.Hodor.Hodor_the_TRPG.Util.Vertex;
 import org.Hodor.Hodor_the_TRPG.View.GameOverActivity;
 
 import java.io.FileOutputStream;
@@ -177,7 +179,7 @@ public class MapController extends Observable implements Serializable{
 
     public synchronized boolean move(Unit unit, int x, int y){
         setChanged();
-        if(!getUnits().contains(unit))
+        if(!getUnits().contains(unit) && Vertex.cameFrom.containsKey(Vertex.vertices.get(unit.getX()+","+unit.getY())))
             return false;
         boolean flag = unitController.move(unit, x, y);
         if(!flag)
@@ -191,7 +193,10 @@ public class MapController extends Observable implements Serializable{
     }
 
     public synchronized boolean equip(Unit unit, Item item){
-        return unitController.equip(unit, item);
+        if(!(item instanceof Consumable))
+            return unitController.equip(unit, item);
+        item.execute(unit);
+        return true;
     }
 
     public void invalidate(){

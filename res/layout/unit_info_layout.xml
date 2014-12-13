@@ -12,7 +12,7 @@
         android:layout_width="319dp"
         android:layout_height="341dp"
         android:id="@+id/unitImage"
-        android:src="@drawable/lannisters_archer__al1"
+        android:src="@drawable/lannisters_archer_al1"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="0dp"
         android:layout_alignParentTop="true"

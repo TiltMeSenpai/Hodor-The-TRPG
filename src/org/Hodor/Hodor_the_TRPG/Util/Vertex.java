@@ -24,7 +24,7 @@ public class Vertex implements Comparable<Vertex>{
         this.x = x;
         this.y = y;
         this.points = points;
-        vertices.put(x + ", " + y, this);
+        vertices.put(x + "," + y, this);
         edges = new ArrayList<Vertex>();
     }
 
@@ -42,7 +42,7 @@ public class Vertex implements Comparable<Vertex>{
         for (int[] dir : dirs){
             if(dir[0] >= 0 && dir[1] >= 0 && dir[0] < Delegate.getMap().getMap().length
                     && dir[1] < Delegate.getMap().getMap().length){
-                String coords = dir[0]+", "+dir[1];
+                String coords = dir[0]+","+dir[1];
                 int dH = Math.abs(map.get(dir[0], dir[1]).getHeight()-h);
                 if(points - dH - 1 >= 0 && dH <= maxV && Delegate.getController().getUnit(dir[0], dir[1]) == null) {
                     if (!vertices.containsKey(coords)) {

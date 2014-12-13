@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -68,7 +67,7 @@ public class TileView extends ImageView implements Observer {
     transient boolean touched;
     transient Unit unit;
     transient Drawable bg;
-    final int MIN_NO_RENDER_SIZE = 33;
+    final int MIN_NO_RENDER_SIZE = 75;
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
@@ -110,7 +109,7 @@ public class TileView extends ImageView implements Observer {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if(Vertex.isValidMove(x + ", " + y))
+        if(Vertex.isValidMove(x + "," + y))
                 canvas.drawRect(0, 0, getWidth(), getHeight(), selectedPaint);
         if(Delegate.getMove() instanceof Attack) {
             if(Delegate.selectedUnit().getRange() >= MapUtils.euclidianDistance(x, y,
@@ -118,13 +117,8 @@ public class TileView extends ImageView implements Observer {
                 canvas.drawRect(0, 0, getWidth(), getHeight(), attackPaint);
         }
         if(unit != null) {
-            if(unit.getDrawable() == null) {
+            if(getWidth() < MIN_NO_RENDER_SIZE){
                 canvas.drawCircle(getWidth() / 2.0F, getHeight() / 2.0F, getHeight() / 2, unitPaint);
-            }
-            else {
-                unit.getDrawable().setBounds(getLeft(), getTop(), getRight(), getBottom());
-                unit.getDrawable().draw(canvas);
-                Log.wtf("Drawing " + unit.getName(), "Drawing this shit");
             }
         }
         super.onDraw(canvas);
@@ -153,22 +147,33 @@ public class TileView extends ImageView implements Observer {
                     break;
             }
         }
-        if(unit != null && unit.getDrawable() != null) {
-            setBackgroundResource(unit.fuckThisShit[i=(i+1)%3]);
+        if(unit != null) {
+            setBackgroundResource(unit.fuckThisShit[unit.state]);
+        }
+        else{
+            setBackgroundResource(R.drawable.tile);
+            getBackground().setColorFilter(new ColorMatrixColorFilter(cm));
         }
         invalidate();
     }
 
     public ListAdapter getContextMenu(){
         ArrayList<String> contextItems = new ArrayList<String>();
-        if(Delegate.getController().getUnits().contains(this.unit)){
+        if(this.unit != null) {
             contextItems.add(unit.getName());
+            contextItems.add("HP: " + unit.getCurrentHp() + "/" + unit.getMaxHP());
+            contextItems.add("XP: " + unit.getXp() + "/" + 100);
+            contextItems.add("Strength: " + unit.getStr());
+            contextItems.add("Armor: " + unit.getDef());
+            contextItems.add("Range: " + unit.getRange());
+            contextItems.add("----------");
+        }
+        if(Delegate.getController().getUnits().contains(this.unit)){
             if(this.unit.canMove())
                 contextItems.add("Move");
             if(this.unit.canAttack())
                 contextItems.add("Attack");
             contextItems.add("Equip");
-            contextItems.add("Info");
         }
         contextItems.add("Items");
         contextItems.add("End Turn");
