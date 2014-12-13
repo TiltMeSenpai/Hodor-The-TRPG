@@ -21,7 +21,8 @@ public class UnitView extends PopupWindow {
     }
 
     private void setup(Unit unit){
-        ((ImageView)getContentView().findViewById(R.id.unitImage)).setImageDrawable(unit.getDrawable());
+        ((ImageView) getContentView().findViewById(R.id.unitImage)).setBackgroundResource(
+                unit.fuckThisShit[unit.state]);
         ((ProgressBar)getContentView().findViewById(R.id.hpBar))
                 .setProgress((unit.getCurrentHp() / unit.getMaxHP()) * 100);
         ((TextView)getContentView().findViewById(R.id.hpText)).setText(unit.getCurrentHp()+"/"+unit.getMaxHP());

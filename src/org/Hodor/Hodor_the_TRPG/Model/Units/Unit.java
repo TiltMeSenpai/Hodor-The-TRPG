@@ -1,6 +1,5 @@
 package org.Hodor.Hodor_the_TRPG.Model.Units;
 
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LevelListDrawable;
 import org.Hodor.Hodor_the_TRPG.Model.Commands.Command;
 import org.Hodor.Hodor_the_TRPG.Model.House;
@@ -37,9 +36,9 @@ abstract public class Unit implements Serializable{
     protected LevelListDrawable image;
     protected boolean movedThisTurn, attackedThisTurn;
     public int[] fuckThisShit = {
-            R.drawable.wildlings_archer__al1,
-            R.drawable.wildlings_archer__al2,
-            R.drawable.wildlings_archer__al3
+            R.drawable.wildlings_archer_al1,
+            R.drawable.wildlings_archer_al2,
+            R.drawable.wildlings_archer_al3
     };
     public int state;
 
@@ -59,9 +58,17 @@ abstract public class Unit implements Serializable{
         this.image = image;
     }
     public void move(int x, int y){
-            this.x = x;
-            this.y = y;
-            this.movedThisTurn = true;
+        if(this.x == x && this.y < y)
+            state = (state+1)%3;
+        else if(this.x < x && this.y == y)
+            state = (state+1)%3 + 3;
+        else if(this.x == x && this.y > y)
+            state = (state+1)%3 + 6;
+        else if(this.x > x && this.y == y)
+            state = (state+1)%3 + 9;
+        this.x = x;
+        this.y = y;
+        this.movedThisTurn = true;
     }
     public int getX(){
         return this.x;
@@ -198,11 +205,5 @@ abstract public class Unit implements Serializable{
 
     public void setAttackedThisTurn(boolean attackedThisTurn) {
         this.attackedThisTurn = attackedThisTurn;
-    }
-
-    public Drawable getDrawable(){
-        if(this.image.getLevel() < 1)
-            this.image.setLevel(1);
-        return this.image;
     }
 }

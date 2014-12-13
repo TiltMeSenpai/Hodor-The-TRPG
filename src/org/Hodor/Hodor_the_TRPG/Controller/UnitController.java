@@ -21,8 +21,8 @@ public class UnitController implements Serializable{
 
     public synchronized boolean move(final Unit unit, int endX, int endY) {
         if(!unit.isMovedThisTurn()) {
-            final Vertex target = Vertex.vertices.get(endX + ", " + endY);
-            Log.i("Moving", endX + ", " + endY);
+            final Vertex target = Vertex.vertices.get(endX + "," + endY);
+            Log.i("Moving", endX + "," + endY);
             Delegate.getAnim().post(new Runnable() {
                 @Override
                 public void run() {

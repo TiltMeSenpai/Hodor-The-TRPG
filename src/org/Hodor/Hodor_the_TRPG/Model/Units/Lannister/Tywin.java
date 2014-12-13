@@ -9,18 +9,20 @@ import org.Hodor.Hodor_the_TRPG.R;
  */
 public class Tywin extends Warrior {
     public Tywin(int x, int y){
-        super(x, y, "Tywin", House.Lannister, 100, 22, 15, 10, 6, 1);fuckThisShit = new int[]{
-                R.drawable.targaryens_rogue__wf1,
-                R.drawable.targaryens_rogue__wf2,
-                R.drawable.targaryens_rogue__wf3,
-                R.drawable.targaryens_rogue__wr1,
-                R.drawable.targaryens_rogue__wr2,
-                R.drawable.targaryens_rogue__wr3,
+        super(x, y, "Tywin", House.Lannister, 100, 22, 15, 10, 6, 1);
+        fuckThisShit = new int[]{
+                R.drawable.lannisters_rogue_wf1,
+                R.drawable.lannisters_rogue_wf2,
+                R.drawable.lannisters_rogue_wf3,
+                R.drawable.lannisters_rogue_wr1,
+                R.drawable.lannisters_rogue_wr2,
+                R.drawable.lannisters_rogue_wr3,
                 R.drawable.lannisters_rogue_wb1,
                 R.drawable.lannisters_rogue_wb2,
                 R.drawable.lannisters_rogue_wb3,
                 R.drawable.lannisters_rogue_wl1,
                 R.drawable.lannisters_rogue_wl2,
                 R.drawable.lannisters_rogue_wl3
-        };}
+        };
+    }
 }

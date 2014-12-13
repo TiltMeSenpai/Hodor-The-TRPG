@@ -60,7 +60,7 @@ public class GameActivity extends Activity {
         for(Item selected : Delegate.getController().getItems()) {
             if (selected.getName().equals(item.getTitle())) {
                 Toast.makeText(getApplicationContext(), "Item Equiped!", Toast.LENGTH_SHORT).show();
-                return Delegate.getController().equip(Delegate.getSelected().getUnit(), selected);
+                Delegate.getController().equip(Delegate.getSelected().getUnit(), selected);
             }
         }
         return false;
