@@ -149,7 +149,7 @@ public class MapController extends Observable implements Serializable{
                 if (unitController.isDead(unit)) {
                     enemy.setXp(enemy.getXp() + (int)Math.sqrt(enemy.getLevel() + unit.getLevel()) + 50);
                     PlayerNode tmp = player;
-                    while(!tmp.getTeam().contains(unit))
+                    while(!tmp.getTeam().contains(enemy))
                         tmp = tmp.getNext();
                     giveItem(tmp);
                     getUnits().remove(unit);
@@ -157,9 +157,9 @@ public class MapController extends Observable implements Serializable{
                 if (unitController.isDead(enemy)) {
                     enemy.setXp(enemy.getXp() + (int)Math.sqrt(enemy.getLevel() + unit.getLevel()) + 50);
                     PlayerNode tmp = player;
-                    giveItem(tmp);
-                    while(!tmp.getTeam().contains(enemy))
+                    while(!tmp.getTeam().contains(unit))
                         tmp = tmp.getNext();
+                    giveItem(tmp);
                     tmp.getTeam().remove(enemy);
                 }
                 flag = true;
@@ -211,8 +211,8 @@ public class MapController extends Observable implements Serializable{
 
     private void giveItem(PlayerNode tmp){
         Random random = new Random();
-            int pct = random.nextInt(100);
-            if (pct>49){
+        int pct = random.nextInt(100);
+        if (pct>49){
             pct = random.nextInt(100);
             if (pct==1){
                 tmp.getItems().add(new Weapon("Wildfire", "Super Mega Awesome", 200));
