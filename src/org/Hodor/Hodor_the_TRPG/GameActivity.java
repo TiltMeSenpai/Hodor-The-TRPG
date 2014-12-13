@@ -53,6 +53,9 @@ public class GameActivity extends Activity {
                             new ArrayList<Item>(), null)));
             Delegate.getController().getPlayer().getNext().setNext(Delegate.getController().getPlayer());
         }
+        if(intent.getStringExtra("Load").equals(1)){
+            Delegate.load();
+        }
         Delegate.getController().setTeam(p1, Delegate.getMap(), true);
         Delegate.getController().quietAdvance();
         Delegate.getController().setTeam(p2, Delegate.getMap(), false);

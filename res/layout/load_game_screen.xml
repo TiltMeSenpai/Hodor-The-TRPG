@@ -21,9 +21,9 @@
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Reload Game"
+            android:text="Load Game"
             android:onClick="loadGame"
-            android:id="@+id/reloadButton" android:layout_centerVertical="true" android:layout_toStartOf="@+id/textView"/>
+            android:id="@+id/loadButton" android:layout_centerVertical="true" android:layout_toStartOf="@+id/textView"/>
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

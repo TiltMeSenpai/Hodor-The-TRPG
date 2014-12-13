@@ -193,7 +193,7 @@ public class Delegate extends Application{
         delegate.start = start;
     }
 
-    public void load(){
+    public static void load(){
         FileInputStream fileInStream = null;
         try {
             fileInStream = context.openFileInput("savedata.dat");
