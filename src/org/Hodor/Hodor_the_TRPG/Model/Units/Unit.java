@@ -191,4 +191,6 @@ abstract public class Unit implements Serializable{
     public void setAttackedThisTurn(boolean attackedThisTurn) {
         this.attackedThisTurn = attackedThisTurn;
     }
+
+    public Drawable getDrawable(){ return this.image; }
 }
