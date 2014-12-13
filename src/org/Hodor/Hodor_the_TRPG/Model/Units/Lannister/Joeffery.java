@@ -13,5 +13,6 @@ public class Joeffery extends Archer {
         super(x, y, "Joeffery", House.Lannister, 50, 20, 20, 0, 7, 4);
         maxZ = 3;
         this.image = Delegate.getMapView().getResources().getDrawable(R.drawable.lannisters_archer);
+
     }
 }
