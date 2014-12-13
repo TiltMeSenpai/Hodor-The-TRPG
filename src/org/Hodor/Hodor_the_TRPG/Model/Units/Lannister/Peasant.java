@@ -13,4 +13,5 @@ public class Peasant extends Warrior {
         super(x, y, "Angry Peasant", House.Lannister, 110, 20, 18, 15, 10, 1);
         this.image = Delegate.getMapView().getResources().getDrawable(R.drawable.lannisters_archer);
     }
+
 }
