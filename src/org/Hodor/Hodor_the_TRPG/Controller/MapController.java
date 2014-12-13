@@ -6,7 +6,10 @@ import android.util.Log;
 import android.widget.Toast;
 import org.Hodor.Hodor_the_TRPG.Delegate;
 import org.Hodor.Hodor_the_TRPG.Model.House;
+import org.Hodor.Hodor_the_TRPG.Model.Items.Armor;
+import org.Hodor.Hodor_the_TRPG.Model.Items.Consumable;
 import org.Hodor.Hodor_the_TRPG.Model.Items.Item;
+import org.Hodor.Hodor_the_TRPG.Model.Items.Weapon;
 import org.Hodor.Hodor_the_TRPG.Model.Map.Map;
 import org.Hodor.Hodor_the_TRPG.Model.PlayerNode;
 import org.Hodor.Hodor_the_TRPG.Model.Units.Unit;
@@ -19,6 +22,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Observable;
+import java.util.Random;
 
 /**
  * Created by Jason on 11/16/14.
@@ -142,10 +146,17 @@ public class MapController extends Observable implements Serializable{
         if (getUnits().contains(unit) && getEUnits().contains(enemy)) {
             if (unitController.attack(unit, enemy)) {
                 if (unitController.isDead(unit)) {
+                    enemy.setXp(enemy.getXp() + (int)Math.sqrt(enemy.getLevel() + unit.getLevel()) + 50);
+                    PlayerNode tmp = player;
+                    while(!tmp.getTeam().contains(unit))
+                        tmp = tmp.getNext();
+                    giveItem(tmp);
                     getUnits().remove(unit);
                 }
                 if (unitController.isDead(enemy)) {
+                    enemy.setXp(enemy.getXp() + (int)Math.sqrt(enemy.getLevel() + unit.getLevel()) + 50);
                     PlayerNode tmp = player;
+                    giveItem(tmp);
                     while(!tmp.getTeam().contains(enemy))
                         tmp = tmp.getNext();
                     tmp.getTeam().remove(enemy);
@@ -192,6 +203,41 @@ public class MapController extends Observable implements Serializable{
 
     public synchronized boolean equip(Unit unit, Item item){
         return unitController.equip(unit, item);
+    }
+
+    private void giveItem(PlayerNode tmp){
+        Random random = new Random();
+            int pct = random.nextInt(100);
+            if (pct>49){
+            pct = random.nextInt(100);
+            if (pct==1){
+                tmp.getItems().add(new Weapon("Wildfire", "Super Mega Awesome", 200));
+            }
+            else if (pct==2){
+                tmp.getItems().add(new Armor("Joeffery", "Just because we hate Joeffery.", 180));
+            }
+            else if (pct>2 && pct<=28){
+                tmp.getItems().add(new Consumable("Health Potion", "Heals your health.", 40, 0));
+            }
+            else if (pct>28 && pct<=53){
+                tmp.getItems().add(new Consumable("Experience Potion", "Gives you xp.", 0, 80));
+            }
+            else if (pct>53 && pct<=65){
+                tmp.getItems().add(new Weapon("Dull Sword", "Why would you ever use this?", 15));
+            }
+            else if (pct>65 && pct<=77){
+                tmp.getItems().add(new Weapon("Dull Bow", "Do something.", 10));
+            }
+            else if (pct>77 && pct<=89){
+                tmp.getItems().add(new Armor("Moist Loin Cloth", "Moist...Moist....MOIST", 10));
+            }
+            else{
+                tmp.getItems().add(new Armor("Sharp Armor", "JK, its actually dull.", 15));
+            }
+        }
+        else{
+
+        }
     }
 
     public void invalidate(){
