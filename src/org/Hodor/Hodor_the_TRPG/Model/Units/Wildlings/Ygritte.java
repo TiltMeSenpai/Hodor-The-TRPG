@@ -11,6 +11,6 @@ import org.Hodor.Hodor_the_TRPG.R;
 public class Ygritte extends Archer {
     public Ygritte(int x, int y){
         super(x, y, "Ygritte", House.Wildlings, 65, 26, 22, 35, 7, 1);
-        this.image = Delegate.getMapView().getResources().getDrawable(R.drawable.wildlings_archer);
+        this.image = (android.graphics.drawable.LevelListDrawable) Delegate.getMapView().getResources().getDrawable(R.drawable.wildlings_archer);
     }
 }

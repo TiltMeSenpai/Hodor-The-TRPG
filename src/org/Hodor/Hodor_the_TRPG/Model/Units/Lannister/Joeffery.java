@@ -12,7 +12,7 @@ public class Joeffery extends Archer {
     public Joeffery(int x, int y){
         super(x, y, "Joeffery", House.Lannister, 50, 20, 20, 0, 7, 4);
         maxZ = 3; // Can climb things like the little bitch he is
-        this.image = Delegate.getMapView().getResources().getDrawable(R.drawable.lannisters_archer);
+        this.image = (android.graphics.drawable.LevelListDrawable) Delegate.getMapView().getResources().getDrawable(R.drawable.lannisters_archer);
 
     }
 }

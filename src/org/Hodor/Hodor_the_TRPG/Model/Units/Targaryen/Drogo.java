@@ -11,6 +11,6 @@ import org.Hodor.Hodor_the_TRPG.R;
 public class Drogo extends Warrior {
     public Drogo(int x, int y){
         super(x, y, "Drogo", House.Targaryen, 65, 16, 11, 35, 7, 1);
-        this.image = Delegate.getMapView().getResources().getDrawable(R.drawable.targaryens_warrior);
+        this.image = (android.graphics.drawable.LevelListDrawable) Delegate.getMapView().getResources().getDrawable(R.drawable.targaryens_warrior);
     }
 }

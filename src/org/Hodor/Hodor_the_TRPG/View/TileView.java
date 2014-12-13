@@ -63,7 +63,7 @@ public class TileView extends ImageView implements Observer {
     }
 
     Tile tile;
-    int x, y;
+    int x, y, i;
     transient Paint paint, unitPaint;
     transient boolean touched;
     transient Unit unit;
@@ -153,8 +153,9 @@ public class TileView extends ImageView implements Observer {
                     break;
             }
         }
-        if(unit != null && unit.getDrawable() != null)
-            setImageDrawable(Delegate.getMapView().getResources().getDrawable(R.drawable.targaryens_archer));
+        if(unit != null && unit.getDrawable() != null) {
+            setBackgroundResource(unit.fuckThisShit[i=(i+1)%3]);
+        }
         invalidate();
     }
 

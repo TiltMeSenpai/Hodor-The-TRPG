@@ -11,6 +11,6 @@ import org.Hodor.Hodor_the_TRPG.R;
 public class JonSnow extends Warrior {
     public JonSnow(int x, int y){
         super(x, y, "John Snow", House.Wildlings, 80, 14, 13, 15, 6, 1);
-        this.image = Delegate.getMapView().getResources().getDrawable(R.drawable.wildlings_warrior);
+        this.image = (android.graphics.drawable.LevelListDrawable) Delegate.getMapView().getResources().getDrawable(R.drawable.wildlings_warrior);
     }
 }

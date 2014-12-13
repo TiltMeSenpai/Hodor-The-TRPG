@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
+<level-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@drawable/starks_rogue__al1" android:minLevel="1"/>
     <item android:drawable="@drawable/starks_rogue__al2" android:minLevel="2"/>
     <item android:drawable="@drawable/starks_rogue__al3" android:minLevel="3"/>
@@ -19,4 +19,4 @@
     <item android:drawable="@drawable/starks_rogue__wr1" android:minLevel="16"/>
     <item android:drawable="@drawable/starks_rogue__wr2" android:minLevel="17"/>
     <item android:drawable="@drawable/starks_rogue__wr3" android:minLevel="18"/>
-</selector>
+</level-list>

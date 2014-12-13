@@ -12,7 +12,7 @@ public class Arya extends Rogue {
     public Arya(int x, int y){
         super(x, y, "Arya", House.Stark, 65, 16, 11, 52, 7, 1);
         maxZ = 3;
-        this.image = Delegate.getMapView().getResources().getDrawable(R.drawable.starks_rogue);
+        this.image = (android.graphics.drawable.LevelListDrawable) Delegate.getMapView().getResources().getDrawable(R.drawable.starks_rogue);
     }
     
 }

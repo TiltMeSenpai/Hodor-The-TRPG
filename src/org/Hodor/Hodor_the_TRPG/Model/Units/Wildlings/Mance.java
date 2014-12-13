@@ -16,6 +16,6 @@ public class Mance extends Warrior {
 
     public Mance(int x, int y){
         super(x, y, "Mance", House.Wildlings, 105, 18, 16, 10, 6, 1);
-        this.image = getMapView().getResources().getDrawable(R.drawable.wildlings_warrior);
+        this.image = (android.graphics.drawable.LevelListDrawable) getMapView().getResources().getDrawable(R.drawable.wildlings_warrior);
     }
 }

@@ -11,6 +11,6 @@ import org.Hodor.Hodor_the_TRPG.R;
 public class DireWolf extends Special {
     public DireWolf(int x, int y){
         super(x, y, "Dire Wolf", House.Stark, 110, 20, 18, 15, 10, 1);
-        this.image = Delegate.getMapView().getResources().getDrawable(R.drawable.starks_wolf);
+        this.image = (android.graphics.drawable.LevelListDrawable) Delegate.getMapView().getResources().getDrawable(R.drawable.starks_wolf);
     }
 }
