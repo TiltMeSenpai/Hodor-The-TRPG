@@ -28,30 +28,37 @@ public class HouseChooseActivity extends Activity{
             @Override
             public void onClick(View view) {
                 intent.putExtra("Player" + intent.getIntExtra("Player", 1), House.Lannister);
-                intent.putExtra("Player", intent.getIntExtra("Player", 1));
+                intent.putExtra("Player", intent.getIntExtra("Player", 1)+1);
+                finish();
+                startActivity(intent);
             }
         });
         findViewById(R.id.starkButton).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 intent.putExtra("Player" + intent.getIntExtra("Player", 1), House.Stark);
-                intent.putExtra("Player", intent.getIntExtra("Player", 1));
+                intent.putExtra("Player", intent.getIntExtra("Player", 1)+1);
+                finish();
+                startActivity(intent);
             }
         });
         findViewById(R.id.targaryenButton).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 intent.putExtra("Player" + intent.getIntExtra("Player", 1), House.Targaryen);
-                intent.putExtra("Player", intent.getIntExtra("Player", 1));
+                intent.putExtra("Player", intent.getIntExtra("Player", 1)+1);
+                finish();
+                startActivity(intent);
             }
         });
         findViewById(R.id.wildlingButton).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 intent.putExtra("Player" + intent.getIntExtra("Player", 1), House.Wildlings);
-                intent.putExtra("Player", intent.getIntExtra("Player", 1));
+                intent.putExtra("Player", intent.getIntExtra("Player", 1)+1);
+                finish();
+                startActivity(intent);
             }
         });
-        startActivity(intent);
     }
 }

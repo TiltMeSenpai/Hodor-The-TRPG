@@ -38,9 +38,6 @@ public class MapController extends Observable implements Serializable{
         player = new PlayerNode(null, new ArrayList<Unit>(), new ArrayList<Item>(),
                 new PlayerNode(new MDP(new ManhattanHeuristic()), new ArrayList<Unit>(), new ArrayList<Item>(), null));
         player.getNext().setNext(player);
-        setTeam(House.Targaryen, map, true);
-        player = player.getNext();
-        setTeam(House.Stark, map, false);
     }
 
     public Unit getUnit(int x, int y){
@@ -97,7 +94,7 @@ public class MapController extends Observable implements Serializable{
         }
         Delegate.invalidate();
 
-        save();
+        // save();
     }
 
     public void save(){
@@ -121,7 +118,9 @@ public class MapController extends Observable implements Serializable{
         }
     }
 
-
+    public void setPlayer(PlayerNode player){
+        this.player = player;
+    }
 
     public void setTeam(House house, Map map, boolean pos){
         UnitFactory.generate(house, map, player.getTeam(), player.getItems(), pos);

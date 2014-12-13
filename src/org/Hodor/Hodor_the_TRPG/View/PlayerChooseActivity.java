@@ -21,6 +21,7 @@ public class PlayerChooseActivity extends Activity {
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("Players", "pvp");
                 intent.putExtra("Player", 1);
+                finish();
                 getApplicationContext().startActivity(intent);
             }
         });
@@ -31,6 +32,7 @@ public class PlayerChooseActivity extends Activity {
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("Players", "pve");
                 intent.putExtra("Player", 1);
+                finish();
                 getApplicationContext().startActivity(intent);
             }
         });

@@ -8,9 +8,10 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import org.Hodor.Hodor_the_TRPG.Delegate;
 import org.Hodor.Hodor_the_TRPG.Model.Commands.MenuActions.Attack;
@@ -27,7 +28,7 @@ import java.util.Observer;
 /**
  * Created by jkoike on 11/7/14.
  */
-public class TileView extends View implements Observer {
+public class TileView extends ImageView implements Observer {
     static Paint selectedPaint = new Paint();
     static Paint attackPaint = new Paint();
     static TextPaint textPaint = new TextPaint();
@@ -63,10 +64,10 @@ public class TileView extends View implements Observer {
 
     Tile tile;
     int x, y;
-    Paint paint, unitPaint;
-    boolean touched;
-    Unit unit;
-    Drawable bg;
+    transient Paint paint, unitPaint;
+    transient boolean touched;
+    transient Unit unit;
+    transient Drawable bg;
     final int MIN_NO_RENDER_SIZE = 33;
 
     @Override
@@ -116,13 +117,17 @@ public class TileView extends View implements Observer {
                         Delegate.selectedUnit().getX(), Delegate.selectedUnit().getY()))
                 canvas.drawRect(0, 0, getWidth(), getHeight(), attackPaint);
         }
-        if(unit != null && getWidth() < MIN_NO_RENDER_SIZE){
-            canvas.drawCircle(getWidth()/2.0F, getHeight()/2.0F, getHeight()/2, unitPaint);
+        if(unit != null) {
+            if(unit.getDrawable() == null) {
+                canvas.drawCircle(getWidth() / 2.0F, getHeight() / 2.0F, getHeight() / 2, unitPaint);
+            }
+            else {
+                unit.getDrawable().setBounds(getLeft(), getTop(), getRight(), getBottom());
+                unit.getDrawable().draw(canvas);
+                Log.wtf("Drawing " + unit.getName(), "Drawing this shit");
+            }
         }
-        else if(unit != null && unit.getDrawable() != null){
-            unit.getDrawable().draw(canvas);
-        }
-
+        super.onDraw(canvas);
     }
 
     @Override
@@ -148,17 +153,21 @@ public class TileView extends View implements Observer {
                     break;
             }
         }
+        if(unit != null && unit.getDrawable() != null)
+            setImageDrawable(Delegate.getMapView().getResources().getDrawable(R.drawable.targaryens_archer));
         invalidate();
     }
 
     public ListAdapter getContextMenu(){
         ArrayList<String> contextItems = new ArrayList<String>();
         if(Delegate.getController().getUnits().contains(this.unit)){
+            contextItems.add(unit.getName());
             if(this.unit.canMove())
                 contextItems.add("Move");
             if(this.unit.canAttack())
                 contextItems.add("Attack");
             contextItems.add("Equip");
+            contextItems.add("Info");
         }
         contextItems.add("Items");
         contextItems.add("End Turn");
