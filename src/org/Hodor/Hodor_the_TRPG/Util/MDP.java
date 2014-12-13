@@ -14,13 +14,14 @@ import java.util.TreeMap;
 /**
  * Created by jkoike on 12/2/14.
  */
-public class MDP implements Serializable{
+public class MDP implements Serializable, Agent{
     Heuristic heuristic;
     Random random = new SecureRandom();
     public MDP(Heuristic heuristic){
         this.heuristic = heuristic;
     }
     public void execute(){
+        Log.i("MDP AI", "Running for "+Delegate.getController().getUnits().size()+" units");
         for(int i = Delegate.getController().getUnits().size()-1; i >= 0; i--){
             if(i >= Delegate.getController().getUnits().size())
                 i = Delegate.getController().getUnits().size()-1;

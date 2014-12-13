@@ -42,6 +42,10 @@ public class MapController extends Observable implements Serializable{
         player.getNext().setNext(player);
     }
 
+    public void quietAdvance(){
+        player = player.getNext();
+    }
+
     public Unit getUnit(int x, int y){
         for(Unit unit : getUnits()){
             if(unit.getX() == x && unit.getY() == y)
@@ -87,6 +91,7 @@ public class MapController extends Observable implements Serializable{
         }
         System.gc();
         if(player.getAi() != null && getUnits().size() > 0){
+            Log.i("AI", "Running AI");
             Delegate.getAi().post(new Runnable() {
                 @Override
                 public void run() {

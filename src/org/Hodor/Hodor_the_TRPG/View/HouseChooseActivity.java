@@ -20,7 +20,7 @@ public class HouseChooseActivity extends Activity{
         ((TextView)findViewById(R.id.chooseHouse)).setText("Player "+getIntent().getIntExtra("Player", 1)+
                 ": Choose Your House");
         final Intent intent = getIntent();
-        if(intent.getIntExtra("Player", 1)==1)
+        if(intent.getIntExtra("Player", 1)==1 && !intent.getStringExtra("Players").equals("suv"))
             intent.setClass(getApplicationContext(), getClass());
         else
             intent.setClass(getApplicationContext(), GameActivity.class);
