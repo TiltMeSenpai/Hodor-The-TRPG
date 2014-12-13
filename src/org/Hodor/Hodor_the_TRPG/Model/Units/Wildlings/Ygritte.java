@@ -11,6 +11,18 @@ import org.Hodor.Hodor_the_TRPG.R;
 public class Ygritte extends Archer {
     public Ygritte(int x, int y){
         super(x, y, "Ygritte", House.Wildlings, 65, 26, 22, 35, 7, 1);
-        this.image = (android.graphics.drawable.LevelListDrawable) Delegate.getMapView().getResources().getDrawable(R.drawable.wildlings_archer);
+        fuckThisShit = new int[]{R.drawable.wildlings_warrior_wf1,
+                R.drawable.wildlings_warrior_wf2,
+                R.drawable.wildlings_warrior_wf3,
+                R.drawable.wildlings_warrior_wr1,
+                R.drawable.wildlings_warrior_wr2,
+                R.drawable.wildlings_warrior_wr3,
+                R.drawable.wildlings_warrior_wb1,
+                R.drawable.wildlings_warrior_wb2,
+                R.drawable.wildlings_warrior_wb3,
+                R.drawable.wildlings_warrior_wl1,
+                R.drawable.wildlings_warrior_wl2,
+                R.drawable.wildlings_warrior_wl3
+        };
     }
 }

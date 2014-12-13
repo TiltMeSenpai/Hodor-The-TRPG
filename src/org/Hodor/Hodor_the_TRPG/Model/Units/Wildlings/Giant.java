@@ -11,6 +11,11 @@ import org.Hodor.Hodor_the_TRPG.R;
 public class Giant extends Special {
     public Giant(int x, int y){
         super(x, y, "Giant", House.Wildlings, 150, 30, 20, 0, 5, 1);
-        this.image = (android.graphics.drawable.LevelListDrawable) Delegate.getMapView().getResources().getDrawable(R.drawable.wildlings_giant);
+        fuckThisShit = new int[]{R.drawable.wildlings_giant_1,
+            R.drawable.wildlings_giant_2,
+            R.drawable.wildlings_giant_3,
+            R.drawable.wildlings_giant_4,
+            R.drawable.wildlings_giant_5
+        };
     }
 }
