@@ -11,6 +11,6 @@ import org.Hodor.Hodor_the_TRPG.R;
 public class Daenerys extends Archer {
     public Daenerys(int x, int y){
         super(x, y, "Daenerys", House.Targaryen, 100, 22, 15, 10, 6, 1);
-        this.image = Delegate.getMapView().getResources().getDrawable(R.drawable.targaryens_archer);
+        this.image = (android.graphics.drawable.LevelListDrawable) Delegate.getMapView().getResources().getDrawable(R.drawable.targaryens_archer);
     }
 }

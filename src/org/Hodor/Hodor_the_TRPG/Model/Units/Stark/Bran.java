@@ -11,6 +11,6 @@ import org.Hodor.Hodor_the_TRPG.R;
 public class Bran extends Archer{
     public Bran(int x, int y){
         super(x, y, "Bran", House.Stark, 80, 14, 13, 15, 6, 5);
-        this.image = Delegate.getMapView().getResources().getDrawable(R.drawable.starks_archer);
+        this.image = (android.graphics.drawable.LevelListDrawable) Delegate.getMapView().getResources().getDrawable(R.drawable.starks_archer);
     }
 }

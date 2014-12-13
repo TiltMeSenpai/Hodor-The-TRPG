@@ -11,6 +11,6 @@ import org.Hodor.Hodor_the_TRPG.R;
 public class Hodor extends Warrior {
     public Hodor(int x, int y){
         super(x, y, "Hodor", House.Stark, 150, 30, 20, 0, 5, 1);
-        this.image = Delegate.getMapView().getResources().getDrawable(R.drawable.starks_warrior);
+        this.image = (android.graphics.drawable.LevelListDrawable) Delegate.getMapView().getResources().getDrawable(R.drawable.starks_warrior);
     }
 }

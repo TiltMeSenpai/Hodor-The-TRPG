@@ -1,10 +1,12 @@
 package org.Hodor.Hodor_the_TRPG.Model.Units;
 
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LevelListDrawable;
 import org.Hodor.Hodor_the_TRPG.Model.Commands.Command;
 import org.Hodor.Hodor_the_TRPG.Model.House;
 import org.Hodor.Hodor_the_TRPG.Model.Items.Armor;
 import org.Hodor.Hodor_the_TRPG.Model.Items.Weapon;
+import org.Hodor.Hodor_the_TRPG.R;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -32,8 +34,14 @@ abstract public class Unit implements Serializable{
     protected Weapon weapon=null;
     protected Armor armor=null;
     private Random generator;
-    protected Drawable image;
+    protected LevelListDrawable image;
     protected boolean movedThisTurn, attackedThisTurn;
+    public int[] fuckThisShit = {
+            R.drawable.wildlings_archer__al1,
+            R.drawable.wildlings_archer__al2,
+            R.drawable.wildlings_archer__al3
+    };
+    public int state;
 
     public static int[][] houseColors = new int[][]{ // Listed in 0-255 ARGB form
             {255, 0, 0, 255}, // Stark
@@ -42,7 +50,7 @@ abstract public class Unit implements Serializable{
             {255, 255, 255, 255} //Wildlings
     };
 
-    public Unit(int x, int y, String name, House house, Drawable image){
+    public Unit(int x, int y, String name, House house, LevelListDrawable image){
         this.x=x;
         this.y=y;
         this.name=name;
@@ -192,5 +200,9 @@ abstract public class Unit implements Serializable{
         this.attackedThisTurn = attackedThisTurn;
     }
 
-    public Drawable getDrawable(){ return this.image; }
+    public Drawable getDrawable(){
+        if(this.image.getLevel() < 1)
+            this.image.setLevel(1);
+        return this.image;
+    }
 }

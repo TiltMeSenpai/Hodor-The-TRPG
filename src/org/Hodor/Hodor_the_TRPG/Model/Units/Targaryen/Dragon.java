@@ -11,6 +11,6 @@ import org.Hodor.Hodor_the_TRPG.R;
 public class Dragon extends Special {
     public Dragon(int x, int y){
         super(x, y, "Dragon", House.Targaryen, 150, 30, 20, 0, 5, 1);
-        this.image = Delegate.getMapView().getResources().getDrawable(R.drawable.targaryens_dragon);
+        this.image = (android.graphics.drawable.LevelListDrawable) Delegate.getMapView().getResources().getDrawable(R.drawable.targaryens_dragon);
     }
 }
