@@ -1,26 +1,35 @@
 package org.Hodor.Hodor_the_TRPG.View;
 
-import android.content.Context;
-import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import org.Hodor.Hodor_the_TRPG.Model.Units.Unit;
+import org.Hodor.Hodor_the_TRPG.R;
 
 /**
  * Created by jkoike on 12/11/14.
  */
-public class UnitView extends View {
-    public UnitView(Context context) {
-        super(context);
+public class UnitView extends PopupWindow {
+    public UnitView(View view){
+        super(view);
     }
 
-    public UnitView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+    public void setUnit(Unit unit){
+        setup(unit);
     }
 
-    public UnitView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    private void setup(){
-        
+    private void setup(Unit unit){
+        ((ImageView)getContentView().findViewById(R.id.unitImage)).setImageDrawable(unit.getDrawable());
+        ((ProgressBar)getContentView().findViewById(R.id.hpBar))
+                .setProgress((unit.getCurrentHp() / unit.getMaxHP()) * 100);
+        ((TextView)getContentView().findViewById(R.id.hpText)).setText(unit.getCurrentHp()+"/"+unit.getMaxHP());
+        ((ProgressBar)getContentView().findViewById(R.id.xpBar))
+                .setProgress(unit.getXp());
+        ((TextView)getContentView().findViewById(R.id.xpText)).setText(unit.getXp()+"/100");
+        ((TextView)getContentView().findViewById(R.id.movement)).setText(unit.getMovement()+"");
+        ((TextView)getContentView().findViewById(R.id.attack)).setText(unit.getStr()+"");
+        ((TextView)getContentView().findViewById(R.id.defense)).setText(unit.getArmor()+"");
     }
 }

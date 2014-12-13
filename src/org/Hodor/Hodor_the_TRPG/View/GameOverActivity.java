@@ -13,6 +13,6 @@ public class GameOverActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_over_layout);
-        ((TextView)findViewById(R.id.textView2)).setText(getIntent().getStringExtra("GameOverMessage"));
+        ((TextView)findViewById(R.id.hpText)).setText(getIntent().getStringExtra("GameOverMessage"));
     }
 }

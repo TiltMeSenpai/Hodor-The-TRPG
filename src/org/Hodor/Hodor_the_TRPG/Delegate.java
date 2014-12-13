@@ -26,6 +26,7 @@ import org.Hodor.Hodor_the_TRPG.Util.MapUtils;
 import org.Hodor.Hodor_the_TRPG.Util.Vertex;
 import org.Hodor.Hodor_the_TRPG.View.MapView;
 import org.Hodor.Hodor_the_TRPG.View.TileView;
+import org.Hodor.Hodor_the_TRPG.View.UnitView;
 
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
@@ -48,6 +49,7 @@ public class Delegate extends Application{
         MenuAction action;
         Vertex head;
         Handler animHandler, messages, aiHandler;
+        UnitView unitInfo;
         public IDelegate(){
             HandlerThread thread = new HandlerThread("Anim");
             thread.start();
@@ -131,6 +133,7 @@ public class Delegate extends Application{
         });
         Delegate.context = context;
         delegate.mapView = mapView;
+        delegate.unitInfo = new UnitView(mapView.findViewById(R.id.unitView));
         invalidate = new Runnable() {
             @Override
             public void run() {
@@ -154,6 +157,8 @@ public class Delegate extends Application{
 
         } else if (action.equals("Attack")) {
             delegate.action = delegate.actions[1];
+        } else if (action.equals("Info")){
+            delegate.unitInfo.setUnit(delegate.start.getUnit());
         }
         else if(action.equals("Equip")) {
             view.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
@@ -165,7 +170,7 @@ public class Delegate extends Application{
             });
             view.showContextMenu();
         }
-        else{
+        else if(action.equals("End Turn")){
             delegate.action = null;
             delegate.start = null;
             delegate.controller.nextTurn();

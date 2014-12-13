@@ -19,6 +19,7 @@ public class TitleActivity extends Activity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), PlayerChooseActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                finish();
                 getApplicationContext().startActivity(intent);
             }
         });

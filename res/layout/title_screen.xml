@@ -16,12 +16,12 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Tap to Start"
-            android:id="@+id/textView2" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true"
+            android:id="@+id/hpText" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true"
             android:layout_marginBottom="87dp"/>
     <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/imageView" android:layout_alignParentEnd="true"
-            android:background="@drawable/starks_archer" android:layout_toEndOf="@+id/textView2"
+            android:background="@drawable/starks_archer" android:layout_toEndOf="@+id/hpText"
             android:contentDescription="al1.gif"/>
 </RelativeLayout>
