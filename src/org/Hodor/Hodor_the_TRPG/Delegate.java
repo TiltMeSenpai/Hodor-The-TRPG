@@ -200,8 +200,6 @@ public class Delegate extends Application{
             player1 = (PlayerNode)objectInStream.readObject();
             player2 = (PlayerNode)objectInStream.readObject();
             delegate.controller.setPlayers(player1,player2);
-//            objectOutStream.writeObject(player);
-//            objectOutStream.writeObject(player.getNext());
 
 
             objectInStream.close();
