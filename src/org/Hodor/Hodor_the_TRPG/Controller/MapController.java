@@ -103,11 +103,11 @@ public class MapController extends Observable implements Serializable{
         FileOutputStream fileOutStream = null;
         try {
             if(Delegate.context != null) {
-            fileOutStream = Delegate.context.openFileOutput(filename, Context.MODE_PRIVATE);
-            ObjectOutputStream objectOutStream = new ObjectOutputStream(fileOutStream);
-            objectOutStream.writeObject(model);
-            objectOutStream.writeObject(player);
-            objectOutStream.writeObject(player.getNext());
+                fileOutStream = Delegate.context.openFileOutput(filename, Context.MODE_PRIVATE);
+                ObjectOutputStream objectOutStream = new ObjectOutputStream(fileOutStream);
+                objectOutStream.writeObject(model);
+                objectOutStream.writeObject(player);
+                objectOutStream.writeObject(player.getNext());
             objectOutStream.close();
             }
         } catch (java.io.FileNotFoundException e) {
