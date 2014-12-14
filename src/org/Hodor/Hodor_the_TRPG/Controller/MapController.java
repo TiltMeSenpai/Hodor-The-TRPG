@@ -13,6 +13,7 @@ import org.Hodor.Hodor_the_TRPG.Model.Items.Weapon;
 import org.Hodor.Hodor_the_TRPG.Model.Map.Map;
 import org.Hodor.Hodor_the_TRPG.Model.PlayerNode;
 import org.Hodor.Hodor_the_TRPG.Model.Units.Unit;
+import org.Hodor.Hodor_the_TRPG.Util.Agent;
 import org.Hodor.Hodor_the_TRPG.Util.Heuristics.ManhattanHeuristic;
 import org.Hodor.Hodor_the_TRPG.Util.MDP;
 import org.Hodor.Hodor_the_TRPG.Util.Vertex;
@@ -87,6 +88,13 @@ public class MapController extends Observable implements Serializable{
 
     public synchronized void nextTurn(){
         setChanged();
+        if(getEUnits().size() == 0) {
+            Delegate.getMap();
+            Intent intent = new Intent(Delegate.getAppContext(), GameOverActivity.class);
+            intent.putExtra("GameOverMessage", "House " + getUnits().get(0).getHouse() + " Rules Weseros!");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Delegate.getAppContext().startActivity(intent);
+        }
         player = player.getNext();
         for(Unit unit : getUnits()){
             unit.setMovedThisTurn(false);
@@ -95,16 +103,18 @@ public class MapController extends Observable implements Serializable{
         System.gc();
         if(player.getAi() != null && getUnits().size() > 0){
             Log.i("AI", "Running AI");
+            final Agent ai = player.getAi();
             Delegate.getAi().post(new Runnable() {
                 @Override
                 public void run() {
-                    player.getAi().execute();
+                    ai.execute();
+                    Log.i("AI Thread", "Running AI");
                 }
             });
         }
         Delegate.invalidate();
 
-        // save();
+        save();
     }
 
     public void save(){
@@ -151,23 +161,23 @@ public class MapController extends Observable implements Serializable{
 
         if (getUnits().contains(unit) && getEUnits().contains(enemy)) {
             if (unitController.attack(unit, enemy)) {
-                if (unitController.isDead(unit)) {
-                    enemy.setXp(enemy.getXp() + (int)Math.sqrt(enemy.getLevel() + unit.getLevel()) + 50);
-                    PlayerNode tmp = player;
-                    while(!tmp.getTeam().contains(enemy))
-                        tmp = tmp.getNext();
-                    giveItem(tmp);
-                    getUnits().remove(unit);
-                }
-                if (unitController.isDead(enemy)) {
-                    enemy.setXp(enemy.getXp() + (int)Math.sqrt(enemy.getLevel() + unit.getLevel()) + 50);
-                    PlayerNode tmp = player;
-                    while(!tmp.getTeam().contains(unit))
-                        tmp = tmp.getNext();
-                    giveItem(tmp);
-                    tmp.getTeam().remove(enemy);
-                }
                 flag = true;
+            }
+            if (unit.getCurrentHp() < 1) {
+                enemy.setXp(enemy.getXp() + (int)Math.sqrt(enemy.getLevel() + unit.getLevel()) + 50);
+                PlayerNode tmp = player;
+                while(!tmp.getTeam().contains(enemy))
+                    tmp = tmp.getNext();
+                giveItem(tmp);
+                getUnits().remove(unit);
+            }
+            if (enemy.getCurrentHp() < 1) {
+                enemy.setXp(enemy.getXp() + (int)Math.sqrt(enemy.getLevel() + unit.getLevel()) + 50);
+                PlayerNode tmp = player;
+                while(!tmp.getTeam().contains(enemy))
+                    tmp = tmp.getNext();
+                giveItem(player);
+                tmp.getTeam().remove(enemy);
             }
         }
         if(getUnits().size() == 0 || getEUnits().size() == 0) {
@@ -211,13 +221,14 @@ public class MapController extends Observable implements Serializable{
         if(!(item instanceof Consumable))
             return unitController.equip(unit, item);
         item.execute(unit);
+        player.getItems().remove(item);
         return true;
     }
 
     private void giveItem(PlayerNode tmp){
         Random random = new Random();
         int pct = random.nextInt(100);
-        if (pct>49){
+        if (pct>0){
             pct = random.nextInt(100);
             if (pct==1){
                 tmp.getItems().add(new Weapon("Wildfire", "Super Mega Awesome", 200));

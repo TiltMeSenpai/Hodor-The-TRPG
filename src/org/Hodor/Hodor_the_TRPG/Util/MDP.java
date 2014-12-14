@@ -68,11 +68,6 @@ public class MDP implements Serializable, Agent{
             catch (NullPointerException ignored){}
         }
         Log.i("MDP", "Ending Turn");
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         Delegate.performAction("End Turn", null);
     }
 }

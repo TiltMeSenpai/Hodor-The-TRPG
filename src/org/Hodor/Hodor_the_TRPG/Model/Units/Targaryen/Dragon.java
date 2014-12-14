@@ -11,7 +11,7 @@ import org.Hodor.Hodor_the_TRPG.R;
  */
 public class Dragon extends Special {
     public Dragon(int x, int y){
-        super(x, y, "Dragon", House.Targaryen, 150, 30, 20, 0, 50, 1);
+        super(x, y, "Dragon", House.Targaryen, 150, 80, 20, 0, 50, 3);
         fuckThisShit = new int[]{
                 R.drawable.targaryens_dragon_wf1,
                 R.drawable.targaryens_dragon_wf2,

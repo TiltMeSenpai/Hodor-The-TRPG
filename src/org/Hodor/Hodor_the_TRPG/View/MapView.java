@@ -107,7 +107,6 @@ public class MapView extends ViewGroup {
             }
         });
         setWillNotDraw(false);
-        Delegate.getController().nextTurn();
     }
 
     @Override

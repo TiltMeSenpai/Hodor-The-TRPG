@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import org.Hodor.Hodor_the_TRPG.R;
 
-import java.io.File;
+import java.util.Arrays;
 
 /**
  * Created by jkoike on 12/8/14.
@@ -20,8 +20,7 @@ public class TitleActivity extends Activity {
         findViewById(R.id.imageButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File save = new File(getApplicationContext().getFilesDir() + File.pathSeparator + "savedata.dat");
-                if (save.canRead()){
+                if (Arrays.asList(fileList()).contains("savedata.dat")){
                     Intent intent = new Intent(getApplicationContext(), SavedGameActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     finish();

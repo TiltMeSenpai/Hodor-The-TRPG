@@ -78,6 +78,12 @@ public class Delegate extends Application{
     public static Map getMap(){
         return delegate.map;
     }
+
+    public static void clearAction(){
+        delegate.action = null;
+        delegate.start = null;
+    }
+
     public static MapController getController(){
         return delegate.controller;
     }
@@ -88,25 +94,17 @@ public class Delegate extends Application{
     public static void interact(TileView view){
         if(delegate.controller.getPlayer().getAi() != null)
             return;
-        if(delegate.start == null) {
+        if(delegate.start == null || delegate.action == null) {
             delegate.start = view;
             delegate.menuContents.setAdapter(view.getContextMenu());
             delegate.contextMenu.openDrawer(Gravity.END);
         }
-        else if(delegate.action != null) {
+        else {
             delegate.action.execute(delegate.controller, delegate.start, view);
             delegate.start = null;
             delegate.action = null;
             invalidate();
         }
-        else
-            delegate.start = null;
-    }
-
-    public static TileView getSelected(){
-        TileView tmp = delegate.start;
-        delegate.start = null;
-        return tmp;
     }
 
     public static Handler getAnim(){
@@ -168,6 +166,11 @@ public class Delegate extends Application{
                 }
             });
             delegate.start.showContextMenu();
+            delegate.action = null;
+        }
+        else if(action.equals("Unequip")){
+            delegate.controller.equip(delegate.start.getUnit(), null);
+            clearAction();
         }
         else if(action.equals("End Turn")){
             delegate.action = null;

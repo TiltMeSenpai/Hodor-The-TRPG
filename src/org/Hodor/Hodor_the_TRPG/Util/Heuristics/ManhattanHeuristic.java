@@ -14,8 +14,9 @@ public class ManhattanHeuristic implements Heuristic {
     public float evaluateMove(Unit unit, int x, int y) {
         float h = 0;
         for(Unit e : Delegate.getController().getEUnits()){
-            h += ((e.getCurrentHp()/unit.getStr()) - (unit.getCurrentHp()/e.getStr()))/
-                    MapUtils.manhattanDistance(e.getX(), e.getY(), x, y);
+            if(unit.getStr() > 0 && e.getStr() > 0)
+                h += ((e.getCurrentHp()/unit.getStr()) - (unit.getCurrentHp()/e.getStr()))/
+                        MapUtils.manhattanDistance(e.getX(), e.getY(), x, y);
         }
         return h;
     }

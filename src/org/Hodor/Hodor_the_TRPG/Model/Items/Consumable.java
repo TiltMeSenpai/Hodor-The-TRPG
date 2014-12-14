@@ -18,13 +18,7 @@ public class Consumable extends Item {
 
     @Override
     public void execute(Unit unit) {
-
-        if(this.hp+unit.getCurrentHp() >= unit.getMaxHP()) {
-            unit.setCurrentHp(unit.getMaxHP());
-        }
-        else{
             unit.setCurrentHp(unit.getCurrentHp()+this.hp);
-        }
 
         if(this.xp+unit.getXp() >= unit.getXpToNextLevel()){
             unit.setXp((this.xp+unit.getXp())%unit.getXpToNextLevel());

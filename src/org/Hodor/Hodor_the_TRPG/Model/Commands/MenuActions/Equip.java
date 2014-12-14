@@ -3,6 +3,9 @@ package org.Hodor.Hodor_the_TRPG.Model.Commands.MenuActions;
 import android.view.ContextMenu;
 import org.Hodor.Hodor_the_TRPG.Controller.MapController;
 import org.Hodor.Hodor_the_TRPG.Delegate;
+import org.Hodor.Hodor_the_TRPG.Model.Items.Armor;
+import org.Hodor.Hodor_the_TRPG.Model.Items.Item;
+import org.Hodor.Hodor_the_TRPG.Model.Items.Weapon;
 import org.Hodor.Hodor_the_TRPG.View.TileView;
 
 /**
@@ -17,7 +20,10 @@ public class Equip extends MenuAction{
 
     public ContextMenu generateContextMenu(ContextMenu menu){
         for (int i = 0; i < Delegate.getController().getItems().size(); i++) {
-            menu.add(Delegate.getController().getItems().get(i).getName());
+            Item item = Delegate.getController().getItems().get(i);
+            if(item != null)
+                menu.add(item.getName()+": "+item.getDescription()+((item instanceof Armor)?(" Def: +"+
+                        ((Armor)item).getDef()):(item instanceof Weapon)?(" Attack: +"+((Weapon)item).getStr()):""));
         }
         return menu;
     }

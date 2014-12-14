@@ -12,6 +12,7 @@ import org.Hodor.Hodor_the_TRPG.Model.House;
 import org.Hodor.Hodor_the_TRPG.Model.Items.Item;
 import org.Hodor.Hodor_the_TRPG.Model.PlayerNode;
 import org.Hodor.Hodor_the_TRPG.Model.Units.Unit;
+import org.Hodor.Hodor_the_TRPG.Model.Units.Wildlings.SurvFlag;
 import org.Hodor.Hodor_the_TRPG.Util.Heuristics.ManhattanHeuristic;
 import org.Hodor.Hodor_the_TRPG.Util.MDP;
 import org.Hodor.Hodor_the_TRPG.Util.SurvivalAgent;
@@ -34,6 +35,10 @@ public class GameActivity extends Activity {
         Delegate.setup(getApplicationContext(), (DrawerLayout)findViewById(R.id.drawer_layout),
                 (ListView)findViewById(R.id.right_drawer), (MapView)findViewById(R.id.map_view));
         Intent intent = getIntent();
+        if(intent.getIntExtra("Load", 2) == 1){
+            Delegate.load();
+            return;
+        }
         House p1 = (House) intent.getSerializableExtra("Player1");
         House p2 = (House) intent.getSerializableExtra("Player2");
         if(intent.getStringExtra("Players").equals("pvp")){
@@ -42,7 +47,7 @@ public class GameActivity extends Activity {
             Delegate.getController().getPlayer().getNext().setNext(Delegate.getController().getPlayer());
         }
         if(intent.getStringExtra("Players").equals("pve")){
-            Delegate.getController().setPlayer(new PlayerNode(null, new ArrayList<Unit>(), new ArrayList<Item>(),
+            Delegate.getController().setPlayer(new PlayerNode(new MDP(new ManhattanHeuristic()), new ArrayList<Unit>(), new ArrayList<Item>(),
                     new PlayerNode(new MDP(new ManhattanHeuristic()), new ArrayList<Unit>(),
                             new ArrayList<Item>(), null)));
             Delegate.getController().getPlayer().getNext().setNext(Delegate.getController().getPlayer());
@@ -52,14 +57,12 @@ public class GameActivity extends Activity {
                     new PlayerNode(new SurvivalAgent(new ManhattanHeuristic()), new ArrayList<Unit>(),
                             new ArrayList<Item>(), null)));
             Delegate.getController().getPlayer().getNext().setNext(Delegate.getController().getPlayer());
-        }
-        if(intent.getStringExtra("Load").equals(1)){
-            Delegate.load();
+            Delegate.getController().getPlayer().getNext().getTeam().add(new SurvFlag());
         }
         Delegate.getController().setTeam(p1, Delegate.getMap(), true);
         Delegate.getController().quietAdvance();
         Delegate.getController().setTeam(p2, Delegate.getMap(), false);
-        Delegate.getController().quietAdvance();
+        Delegate.getController().nextTurn();
         Log.i("Player 1, "+p1.toString(), Delegate.getController().getUnits().toString());
         Log.i("Player 2, "+p2.toString(), Delegate.getController().getEUnits().toString());
         Delegate.invalidate();
@@ -67,12 +70,14 @@ public class GameActivity extends Activity {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        for(Item selected : Delegate.getController().getItems()) {
-            if (selected.getName().equals(item.getTitle())) {
+        for(int i = Delegate.getController().getItems().size() - 1; i > -1; i--) {
+            Item selected = Delegate.getController().getItems().get(i);
+            if (item != null && item.getTitle().toString().contains(selected.getName())) {
                 Toast.makeText(getApplicationContext(), "Item Equiped!", Toast.LENGTH_SHORT).show();
-                Delegate.getController().equip(Delegate.getSelected().getUnit(), selected);
+                Delegate.getController().equip(Delegate.selectedUnit(), selected);
+                Delegate.clearAction();
             }
         }
-        return false;
+        return true;
     }
 }

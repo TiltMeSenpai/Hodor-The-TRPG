@@ -111,7 +111,7 @@ public class TileView extends ImageView implements Observer {
     protected void onDraw(Canvas canvas) {
         if(Vertex.isValidMove(x + "," + y))
                 canvas.drawRect(0, 0, getWidth(), getHeight(), selectedPaint);
-        if(Delegate.getMove() instanceof Attack) {
+        if(Delegate.getMove() instanceof Attack && Delegate.selectedUnit() != null) {
             if(Delegate.selectedUnit().getRange() >= MapUtils.euclidianDistance(x, y,
                         Delegate.selectedUnit().getX(), Delegate.selectedUnit().getY()))
                 canvas.drawRect(0, 0, getWidth(), getHeight(), attackPaint);
@@ -122,6 +122,7 @@ public class TileView extends ImageView implements Observer {
             }
         }
         super.onDraw(canvas);
+        canvas.drawText(tile.getHeight()+"", getWidth()/2, getHeight()/2, textPaint);
     }
 
     @Override
@@ -148,7 +149,11 @@ public class TileView extends ImageView implements Observer {
             }
         }
         if(unit != null) {
-            setBackgroundResource(unit.fuckThisShit[unit.state]);
+            if(unit.state >= unit.fuckThisShit.length)
+                unit.state = unit.fuckThisShit.length-1;
+            setBackgroundResource(
+                    unit.fuckThisShit[unit.state]
+            );
         }
         else{
             setBackgroundResource(R.drawable.tile);
@@ -173,7 +178,10 @@ public class TileView extends ImageView implements Observer {
                 contextItems.add("Move");
             if(this.unit.canAttack())
                 contextItems.add("Attack");
-            contextItems.add("Equip");
+            if(unit.getWeapon() == null && unit.getArmor() == null)
+                contextItems.add("Equip");
+            else
+                contextItems.add("Unequip");
         }
         contextItems.add("Items");
         contextItems.add("End Turn");

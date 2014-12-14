@@ -144,17 +144,14 @@ abstract public class Unit implements Serializable{
     }
     public void setArmor(Armor armor) {
         // If unequipping.
-        if (armor == null) {
-            if (this.armor == null) {
-
-            } else {
+        if (armor == null && this.armor != null) {
                 this.def -= this.armor.getDef();
                 this.armor = null;
-            }
         }
         // If equipping, change the def to match the new armor's stat.
-        else {
-            this.def -= this.armor.getDef();
+        else if(armor != null){
+            if(this.armor != null)
+                this.def -= this.armor.getDef();
             this.armor = armor;
             this.def += armor.getDef();
         }

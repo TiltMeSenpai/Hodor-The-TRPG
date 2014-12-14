@@ -53,12 +53,22 @@ public class UnitController implements Serializable{
     }
 
     public boolean equip(Unit unit, Item item){
+        if(item == null){
+            if(unit.getArmor() != null)
+                Delegate.getController().getPlayer().getItems().add(unit.getArmor());
+            if(unit.getWeapon() != null)
+                Delegate.getController().getPlayer().getItems().add(unit.getWeapon());
+            unit.setArmor(null);
+            unit.setWeapon(null);
+        }
         if (item instanceof Weapon){
             unit.setWeapon((Weapon) item);
+            Delegate.getController().getPlayer().getItems().remove(item);
             return true;
         }
         else if (item instanceof Armor){
             unit.setArmor((Armor) item);
+            Delegate.getController().getPlayer().getItems().remove(item);
             return true;
         }
         else{
