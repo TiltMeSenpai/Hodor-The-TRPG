@@ -3,9 +3,25 @@ package org.Hodor.Hodor_the_TRPG.Model.Units;
 import org.Hodor.Hodor_the_TRPG.Model.House;
 
 /**
- * Created by Jason on 11/12/14.
+ * This is the warrior class which extends a basic {@link Unit}
+ * @author Jason, Trevor, Josh, Dana
  */
+
 public class Warrior extends Unit{
+	
+	/**
+	 * This is the constructor to create a new warrior.
+	 * @param x - starting x location on the map
+	 * @param y - starting y location on the map
+	 * @param name - the name of the unit
+	 * @param house - which house they belong to
+	 * @param hp - how much hp they have
+	 * @param str - how much str they have
+	 * @param def - how much def they have
+	 * @param evasion - how much evasion they have
+	 * @param movement - how much movement they have
+	 * @param range - how much range they have
+	 */
 
     public Warrior(int x, int y, String name, House house, int hp, int str, int def, int evasion, int movement, int range){
         super(x,y,name,house, null);
@@ -20,6 +36,11 @@ public class Warrior extends Unit{
         this.xp = 0;
 
     }
+    
+    /**
+     * This is the attack method for how a warrior class can attack another {@link Unit}
+     * @param unit - which unit the archer is attacking in order to modify its stats.
+     */
 
     @Override
     public boolean attack(Unit unit) {
@@ -29,13 +50,10 @@ public class Warrior extends Unit{
             if((Math.abs(unit.getX() - x) + Math.abs(unit.getY() - y)) <= unit.range){
                 currentHp = currentHp - unit.str;
             }
-
             return true;
 
         } else {
             return false;
         }
-
-
     }
 }

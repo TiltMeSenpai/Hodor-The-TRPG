@@ -3,18 +3,35 @@ package org.Hodor.Hodor_the_TRPG.Model.Items;
 import org.Hodor.Hodor_the_TRPG.Model.Units.Unit;
 
 /**
- * Created by Jason on 11/12/14.
+ * This is the armor class which extends a basic {@link Item}
+ * @author Jason, Trevor, Josh, Dana
  */
+
 public class Consumable extends Item {
 
     private int hp;
     private int xp;
+    
+    /**
+     * Constructs a new consumable whenever this is called
+     * @param name - the name of the consumable
+     * @param description - the description of the consumable
+     * @param hp - how much hp the consumable will modify a {@link Unit}'s hp
+     * @param xp - how much xp the consumable will modify a {@link Unit}'s xp
+     */
 
     public Consumable(String name, String description, int hp, int xp){
         super(name, description);
         this.hp=hp;
         this.xp=xp;
     }
+    
+    /**
+     * This modifies the units xp and hp depending on what consumable the unit used. If the unit used an hp potion then
+     * the units hp is increased by how much the potion healed. Similarly increased xp by how much the potion gives if it
+     * is an xp potion.
+     * @param unit - the unit to use the consumable on
+     */
 
     @Override
     public void execute(Unit unit) {
@@ -33,11 +50,9 @@ public class Consumable extends Item {
         else{
             unit.setXp(unit.getXp() + this.xp);
         }
-
-
     }
 
-    /* NOT USED */
+    /* NOT USED in consumable*/
 
     @Override
     public Item equip(Unit unit) {
@@ -48,5 +63,4 @@ public class Consumable extends Item {
     public Item unequip(Unit unit) {
         return null;
     }
-
 }

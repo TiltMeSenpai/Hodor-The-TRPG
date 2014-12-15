@@ -3,18 +3,28 @@ package org.Hodor.Hodor_the_TRPG.Model.Items;
 import org.Hodor.Hodor_the_TRPG.Model.Units.Unit;
 
 /**
- * Created by Jason on 11/12/14.
+ * This is the armor class which extends a basic {@link Item}
+ * @author Jason, Trevor, Josh, Dana
  */
 
 public class Armor extends Item {
 
     private int def;
+    
+    /**
+     * Constructs a new armor whenever this is called
+     * @param name - the name of the new armor
+     * @param description - the description of the armor
+     * @param def - how much def the weapon will modify a {@link Unit}'s def
+     */
 
     public Armor(String name, String description, int def){
         super(name, description);
         this.def = def;
 
     }
+    
+    //not used in the armor class
 
     @Override
     public void execute(Unit unit) {
